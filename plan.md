@@ -6,7 +6,7 @@ Implement this plan in a new session after the user explicitly says **go**, as s
 
 ## Current game
 
-`Round` owns the state machine and puzzle data. `LockView` owns 3D entities, animation, bulbs, and the loss flash. `Hud` owns RmlUi, card clicks, keyboard bindings, and result controls. `loadLevel(id)` supplies the fixed level and is the seam for future generation.
+`Round` owns the state machine and puzzle data. `LockView` owns 3D entities, animation, bulbs, and the loss flash. `Hud` owns RmlUi, card clicks, keyboard bindings, and result controls. `loadLevel(id)` supplies the fixed levels. Their `nextId` fields define progression from the storage room to the workshop.
 
 A round starts with an automatic strike. A selected card starts a turn, then another strike. An occupied socket triggers shock and pick drop, then loss. A successful strike sets the pin and plays recoil. After recoil, the last strike opens the door. Otherwise the round starts the next queued card or waits for input.
 
@@ -30,7 +30,7 @@ A round starts with an automatic strike. A selected card starts a turn, then ano
 - Add a local `GameFlow` with `playing` and `results` states. It owns the active level ID and decides what to do with round completion, restart, retry, and future next-level requests. It has no frame timer.
 - Enter `results` once when `Round` finishes the door-opening or pick-drop animation. Keep loss and win as round outcomes. Present that result through the HUD.
 - Route Retry back to `playing` on the same level. Preserve Restart during play and from the result screen. Both use `loadLevel(id)` and the existing round reset path.
-- Add a Next Level transition when there is a second level or a generator to supply one. Use an SRI autoload for `GameFlow` if it later needs to persist across title, level-select, or gameplay scenes.
+- Next Level advances after a win when the current level has a `nextId`. Restart and Retry reload the current level. Use an SRI autoload for `GameFlow` if it later needs to persist across title, level-select, or gameplay scenes.
 
 ## Verification and delivery
 
@@ -46,12 +46,14 @@ Capture the current behavior before editing and replay the same cases after each
 | Idle and results | Keyboard shortcuts remain available. The round, mesh animations, and HUD perform no recurring work while idle. |
 | Retry | Results close, `GameFlow` goes back to `playing`, and a fresh round starts. |
 | Independent instances | Selecting cards or advancing one machine does not alter another machine or its input level data. |
+| Next Level | A storage-room win unlocks the workshop. Losses and the final level offer Retry only. |
 
 ### Verification status
 
 - 2026-11-20. The current Lua modules passed baseline parity, win and loss sequences, FIFO queueing, restart across animation phases, slow-frame transitions, independent instances, and Retry. With stubbed SRI APIs, the entry point also passed HUD callbacks, keyboard restart, shock reset, and idle and results update checks.
 - SRI project validation and packaging passed. All 12 Lua files in the staged package matched the project source. The extracted puzzle rules also passed direct tests for wraparound in both directions, outcome precedence, and independent board snapshots.
-- Pending live runtime check. Play the win and loss sequences in the staged game, check restart during a turn and shock, and verify Retry before replacing `build/`.
+- The progression checks passed using the game entry point and stubbed SRI APIs. They cover Next Level visibility and gating, the workshop win and loss, rebuilding sockets, and Retry and Restart on the current level. The packaged Lua scripts and HUD document matched the source.
+- Pending live runtime check. Play both levels in the staged game, check restart during a turn and shock, and verify Retry and Next Level before replacing `build/`.
 
 After the runtime checks pass, refresh `build/lockpick_puzzle.exe` and its accompanying files. SRI requires the packaging output to be outside the project. Stage the build there, then copy the verified package into `build/`.
 

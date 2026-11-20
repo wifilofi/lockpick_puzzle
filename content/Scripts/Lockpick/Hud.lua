@@ -16,7 +16,7 @@ local HUD_RESULTS = {
     lost = "Shock! That socket was occupied.",
 }
 
-function Hud.new(selectCard, restart, retry)
+function Hud.new(selectCard, restart, retry, advance)
     local document = assert(UI.LoadDocument("game/UI/Lockpick.rml"))
     local self = setmetatable({
         document = document,
@@ -25,6 +25,7 @@ function Hud.new(selectCard, restart, retry)
         message = assert(document:GetElement("message")),
         result = assert(document:GetElement("result")),
         resultText = assert(document:GetElement("outcome")),
+        nextLevelButton = assert(document:GetElement("next-level")),
         cardButtons = {},
         visibleCards = {},
         controls = assert(Input.GetContext("Lockpick")),
@@ -40,6 +41,7 @@ function Hud.new(selectCard, restart, retry)
     end
     assert(document:On("restart", "click", restart))
     assert(document:On("replay", "click", retry))
+    assert(document:On("next-level", "click", advance))
     self.controls:BindAction("restart", PhysicalKey.R)
     return self
 end
@@ -59,7 +61,7 @@ function Hud:pollInput()
     return false
 end
 
-function Hud:update(round)
+function Hud:update(round, canAdvance)
     if self.displayedName ~= round.name then
         self.displayedName = round.name
         assert(self.title:SetText(round.name))
@@ -77,6 +79,10 @@ function Hud:update(round)
         self.displayedOutcome = outcome
         assert(self.resultText:SetText(outcome))
         assert(self.result:SetClass("hidden", outcome == ""))
+    end
+    if self.displayedNextLevel ~= canAdvance then
+        self.displayedNextLevel = canAdvance
+        assert(self.nextLevelButton:SetClass("hidden", not canAdvance))
     end
     for slot, button in ipairs(self.cardButtons) do
         local turns = round.hand[slot]

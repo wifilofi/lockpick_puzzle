@@ -19,6 +19,7 @@
     <div id="result" class="hidden">
         <h1 id="outcome"></h1>
         <button id="replay">Restart [R]</button>
+        <button id="next-level" class="hidden">Next Level</button>
     </div>
 </body>
 </rml>

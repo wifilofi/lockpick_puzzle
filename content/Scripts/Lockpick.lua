@@ -6,13 +6,17 @@ local LEVEL = "storage"
 
 local flow, round, view, hud
 
+local function refreshHud()
+    hud:update(round, flow:nextLevelId() ~= nil)
+end
+
 local function selectCard(slot)
-    if round:selectCard(slot) then hud:update(round) end
+    if round:selectCard(slot) then refreshHud() end
 end
 
 local function refreshRound()
     view:restart(round)
-    hud:update(round)
+    refreshHud()
 end
 
 local function restart()
@@ -24,11 +28,15 @@ local function retry()
     if flow:retry() then refreshRound() end
 end
 
+local function advance()
+    if flow:advance() then refreshRound() end
+end
+
 function OnStart()
     flow = GameFlow.new(LEVEL, Log.info)
     round = flow.round
     view = LockView.new()
-    hud = Hud.new(selectCard, restart, retry)
+    hud = Hud.new(selectCard, restart, retry, advance)
     refreshRound()
     hud:show()
 end
@@ -41,6 +49,6 @@ function OnUpdate(dt)
     view:update(round, phase, progress, elapsed)
     if round.result ~= previousResult then flow:roundFinished() end
     if round.status ~= previousStatus or round.attempts ~= previousAttempts or round.result ~= previousResult then
-        hud:update(round)
+        refreshHud()
     end
 end
