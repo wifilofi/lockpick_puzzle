@@ -10,7 +10,7 @@ body {
 #header h1 {
     margin-bottom: 2dp;
 }
-#attempts {
+#attempts, #link-help {
     color: #c4c5c9;
     font-size: 14dp;
 }

@@ -35,7 +35,8 @@ end
 
 local function requestHint()
     if not round:isReady() then return end
-    local slot = PuzzleSolver.findWinningCard(round.occupied, round.target, round.attempts, round.hand)
+    local slot = PuzzleSolver.findWinningCard(
+        round.occupied, round.target, round.attempts, round.hand, round.linkPartners)
     hud:showHint(slot)
 end
 

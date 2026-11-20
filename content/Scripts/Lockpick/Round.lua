@@ -17,6 +17,8 @@ end
 function Round:restart(level)
     self.name = level.name
     self.socketCount = #level.sectors
+    self.linkPairs = level.links or {}
+    self.linkPartners = PuzzleRules.linkPartners(self.linkPairs, self.socketCount)
     self.occupied = PuzzleRules.initialOccupancy(level.sectors)
     self.hand = { table.unpack(level.moves) }
     self.history = {}
@@ -92,7 +94,7 @@ end
 
 function Round:impact()
     self.occupied, self.attempts, self.pendingResult =
-        PuzzleRules.strike(self.occupied, self.target, self.attempts)
+        PuzzleRules.strike(self.occupied, self.target, self.attempts, self.linkPartners)
     if self.pendingResult == "lost" then
         self:clearCards()
         self.status = "occupied"
