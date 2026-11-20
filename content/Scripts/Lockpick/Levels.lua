@@ -1,5 +1,7 @@
 local PuzzleGenerator = require("Scripts.Lockpick.PuzzleGenerator")
 
+local firstId = "storage"
+
 local levelData = {
     storage = { name = "Подсобка", sectors = "...k....", moves = { 1, 2, 2 }, nextId = "workshop" },
     workshop = { name = "Мастерская", sectors = "...k...k..", moves = { 1, 2, 3 }, nextId = "relay" },
@@ -28,4 +30,25 @@ local function nextLevelId(id)
     return assert(levelData[id], "Unknown lock: " .. id).nextId
 end
 
-return { loadLevel = loadLevel, nextLevelId = nextLevelId }
+local function menuLevels()
+    local levels = {}
+    local id = firstId
+    while id do
+        local level = levelData[id]
+        levels[#levels + 1] = { id = id, name = level.name }
+        id = level.nextId
+    end
+    return levels
+end
+
+local function hasLevel(id)
+    return levelData[id] ~= nil
+end
+
+return {
+    firstId = firstId,
+    loadLevel = loadLevel,
+    nextLevelId = nextLevelId,
+    menuLevels = menuLevels,
+    hasLevel = hasLevel,
+}

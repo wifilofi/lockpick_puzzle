@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "activeCamera": "6977d78a-e73d-4515-bdb0-e83b7d0cde1a",
+  "directionalLight": "38796c05-007e-4b41-b57c-f245d2aa86d1",
+  "entities": [
+    {
+      "id": "6977d78a-e73d-4515-bdb0-e83b7d0cde1a",
+      "name": "Title camera",
+      "parent": null,
+      "tags": [],
+      "components": {
+        "Transform": {
+          "position": [
+            0,
+            0.05,
+            7.2
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "Camera": {
+          "fovY": 0.72,
+          "nearPlane": 0.1,
+          "farPlane": 75
+        }
+      }
+    },
+    {
+      "id": "38796c05-007e-4b41-b57c-f245d2aa86d1",
+      "name": "Soft fill",
+      "parent": null,
+      "tags": [],
+      "components": {
+        "Transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            -0.3,
+            0.16,
+            0,
+            0.9404254356406998
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "DirectionalLight": {
+          "color": [
+            0.7,
+            0.79,
+            1.0
+          ],
+          "intensity": 0.42
+        }
+      }
+    },
+    {
+      "id": "dfd12cdb-f3de-410b-9d37-633194ec7c8b",
+      "name": "Lockpick title",
+      "parent": null,
+      "tags": [],
+      "components": {
+        "Transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "Script": {
+          "enabled": true,
+          "properties": {},
+          "script": {
+            "id": "0bfe09a9-b46e-4153-9c22-0cb76f9c974c",
+            "path": "game/Scripts/Title.lua"
+          }
+        }
+      }
+    }
+  ]
+}
