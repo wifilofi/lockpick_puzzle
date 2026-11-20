@@ -15,11 +15,19 @@
         <button id="undo" class="hidden">Undo</button>
         <button id="restart">Restart [R]</button>
     </div>
+    <div id="card-panel">
+        <button id="card1" class="card column-1 row-1 hidden"><span id="card-value1" class="card-value"></span></button>
+        <button id="card2" class="card column-2 row-1 hidden"><span id="card-value2" class="card-value"></span></button>
+        <button id="card3" class="card column-3 row-1 hidden"><span id="card-value3" class="card-value"></span></button>
+        <button id="card4" class="card column-1 row-2 hidden"><span id="card-value4" class="card-value"></span></button>
+        <button id="card5" class="card column-2 row-2 hidden"><span id="card-value5" class="card-value"></span></button>
+        <button id="card6" class="card column-3 row-2 hidden"><span id="card-value6" class="card-value"></span></button>
+        <button id="card7" class="card column-1 row-3 hidden"><span id="card-value7" class="card-value"></span></button>
+        <button id="card8" class="card column-2 row-3 hidden"><span id="card-value8" class="card-value"></span></button>
+        <button id="card9" class="card column-3 row-3 hidden"><span id="card-value9" class="card-value"></span></button>
+    </div>
     <div id="controls">
         <p id="message"></p>
-        <button id="card1" class="card"></button>
-        <button id="card2" class="card"></button>
-        <button id="card3" class="card"></button>
         <button id="hint" class="hidden">Hint</button>
     </div>
     <div id="result" class="hidden">

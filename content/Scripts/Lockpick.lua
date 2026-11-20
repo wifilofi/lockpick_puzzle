@@ -11,8 +11,8 @@ local function refreshHud()
     hud:update(round, flow:nextLevelId() ~= nil)
 end
 
-local function selectCard(slot)
-    if round:selectCard(slot) then refreshHud() end
+local function selectCard(key)
+    if round:selectKey(key) then refreshHud() end
 end
 
 local function refreshRound()
@@ -37,7 +37,7 @@ local function requestHint()
     if not round:isReady() then return end
     local slot = PuzzleSolver.findWinningCard(
         round.occupied, round.target, round.attempts, round.hand, round.linkPartners, round.springs)
-    hud:showHint(slot)
+    hud:showHint(round.handSlots[slot])
 end
 
 local function undo()
