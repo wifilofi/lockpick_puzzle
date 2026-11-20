@@ -9,7 +9,7 @@ local GameFlow = {}
 GameFlow.__index = GameFlow
 
 function GameFlow.new(levelId, log)
-    local self = setmetatable({ levelId = levelId }, GameFlow)
+    local self = setmetatable({ levelId = levelId, level = Levels.loadLevel(levelId) }, GameFlow)
     local function logGameTransition(previous, state)
         if not log then return end
         local details = state == GameState.RESULTS and " outcome=" .. self.round.result or ""
@@ -22,17 +22,38 @@ function GameFlow.new(levelId, log)
     end
     self.gameStateMachine = StateMachine.new(GameStates.definitions, self, logGameTransition)
     self.gameStateMachine:transitionTo(GameState.PLAYING)
-    self.round = Round.new(Levels.loadLevel(levelId), logRoundTransition)
+    self.round = Round.new(self.level, logRoundTransition)
     return self
 end
 
 function GameFlow:restart()
     self.gameStateMachine:transitionTo(GameState.PLAYING)
-    self.round:restart(Levels.loadLevel(self.levelId))
+    self.round:restart(self.level)
 end
 
 function GameFlow:retry()
     if self.gameStateMachine.currentState ~= GameState.RESULTS then return false end
+    self:restart()
+    return true
+end
+
+function GameFlow:undo()
+    if not self.round:undo() then return false end
+    self.gameStateMachine:transitionTo(GameState.PLAYING)
+    return true
+end
+
+function GameFlow:nextLevelId()
+    if self.gameStateMachine.currentState ~= GameState.RESULTS or self.round.result ~= "won" then
+        return nil
+    end
+    return Levels.nextLevelId(self.levelId)
+end
+
+function GameFlow:advance()
+    local nextId = self:nextLevelId()
+    if not nextId then return false end
+    self.levelId, self.level = nextId, Levels.loadLevel(nextId)
     self:restart()
     return true
 end

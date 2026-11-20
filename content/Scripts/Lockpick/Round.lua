@@ -1,3 +1,4 @@
+local PuzzleRules = require("Scripts.Lockpick.PuzzleRules")
 local StateMachine = require("Scripts.Lockpick.StateMachine")
 local RoundStates = require("Scripts.Lockpick.RoundStates")
 
@@ -16,20 +17,34 @@ end
 function Round:restart(level)
     self.name = level.name
     self.socketCount = #level.sectors
-    self.occupied = {}
-    for i = 1, self.socketCount do
-        self.occupied[i] = level.sectors:sub(i, i) == "k"
-    end
+    self.occupied = PuzzleRules.initialOccupancy(level.sectors)
     self.hand = { table.unpack(level.moves) }
+    self.history = {}
     self.queue, self.queueHead = {}, 1
     self.attempts, self.target = #self.hand + 1, 1
     self.angleFrom, self.angleTo = 0, 0
-    self.result, self.status = nil, "openingStrike"
+    self.result, self.pendingResult, self.status = nil, nil, "openingStrike"
     self.phaseMachine:transitionTo(RoundState.STRIKE)
 end
 
 function Round:clearCards()
     self.hand, self.queue, self.queueHead = {}, {}, 1
+end
+
+function Round:recordBeforeTurn()
+    local hand = { table.unpack(self.hand) }
+    -- Reverse the pending selections to recover the hand before this turn.
+    for index = #self.queue, self.queueHead, -1 do
+        local card = self.queue[index]
+        table.insert(hand, card.slot, card.turns)
+    end
+    self.history[#self.history + 1] = {
+        hand = hand,
+        occupied = self.occupied, -- Each strike replaces the board with a fresh snapshot.
+        attempts = self.attempts,
+        target = self.target,
+        angle = self.angleTo,
+    }
 end
 
 function Round:startQueuedTurn()
@@ -39,9 +54,10 @@ function Round:startQueuedTurn()
         self.phaseMachine:transitionTo(RoundState.READY)
         return
     end
-    local turns = self.queue[self.queueHead]
+    self:recordBeforeTurn()
+    local turns = self.queue[self.queueHead].turns
     self.queueHead = self.queueHead + 1
-    self.target = (self.target - 1 + turns) % self.socketCount + 1
+    self.target = PuzzleRules.targetAfterTurn(self.target, turns, self.socketCount)
     self.angleFrom, self.angleTo = self.angleTo, self.angleTo + turns
     self.status = "turning"
     self.phaseMachine:transitionTo(RoundState.TURN)
@@ -53,31 +69,46 @@ function Round:selectCard(slot)
         return
     end
     if not self.hand[slot] then return end
-    self.queue[#self.queue + 1] = table.remove(self.hand, slot)
+    self.queue[#self.queue + 1] = { slot = slot, turns = table.remove(self.hand, slot) }
     if phase == RoundState.READY then self:startQueuedTurn() end
     return true
 end
 
+function Round:canUndo()
+    return #self.history > 0 and (self:isReady() or self.result == "lost")
+end
+
+function Round:undo()
+    if not self:canUndo() then return false end
+    local previous = table.remove(self.history)
+    self.hand, self.occupied = previous.hand, previous.occupied
+    self.attempts, self.target = previous.attempts, previous.target
+    self.angleFrom, self.angleTo = previous.angle, previous.angle
+    self.queue, self.queueHead = {}, 1
+    self.result, self.pendingResult, self.status = nil, nil, "choose"
+    self.phaseMachine:transitionTo(RoundState.READY)
+    return true
+end
+
 function Round:impact()
-    self.attempts = self.attempts - 1
-    if self.occupied[self.target] then
+    self.occupied, self.attempts, self.pendingResult =
+        PuzzleRules.strike(self.occupied, self.target, self.attempts)
+    if self.pendingResult == "lost" then
         self:clearCards()
         self.status = "occupied"
         self.phaseMachine:transitionTo(RoundState.SHOCK)
     else
-        self.occupied[self.target] = true
         self.phaseMachine:transitionTo(RoundState.RECOIL)
     end
 end
 
-function Round:finish(won)
-    self.result = won and "won" or "lost"
-    self.status = nil
+function Round:finish()
+    self.result, self.pendingResult, self.status = self.pendingResult, nil, nil
     self.phaseMachine:transitionTo(RoundState.FINISHED)
 end
 
 function Round:afterRecoil()
-    if self.attempts == 0 then
+    if self.pendingResult == "won" then
         self:clearCards()
         self.status = "openingDoor"
         self.phaseMachine:transitionTo(RoundState.OPEN)
@@ -88,6 +119,10 @@ end
 
 function Round:currentPhase()
     return self.phaseMachine.currentState
+end
+
+function Round:isReady()
+    return self:currentPhase() == RoundState.READY
 end
 
 function Round:isAnimating()

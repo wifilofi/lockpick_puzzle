@@ -6,7 +6,7 @@ Implement this plan in a new session after the user explicitly says **go**, as s
 
 ## Current game
 
-`Round` owns the state machine and puzzle data. `LockView` owns 3D entities, animation, bulbs, and the loss flash. `Hud` owns RmlUi, card clicks, keyboard bindings, and result controls. `loadLevel(id)` supplies the fixed level and is the seam for future generation.
+`Round` owns the state machine and puzzle data. `LockView` owns 3D entities, animation, bulbs, and the loss flash. `Hud` owns RmlUi, card clicks, keyboard bindings, and result controls. `loadLevel(id)` supplies authored or generated puzzles. The `nextId` fields define progression from the storage room through the workshop to the generated challenge.
 
 A round starts with an automatic strike. A selected card starts a turn, then another strike. An occupied socket triggers shock and pick drop, then loss. A successful strike sets the pin and plays recoil. After recoil, the last strike opens the door. Otherwise the round starts the next queued card or waits for input.
 
@@ -30,7 +30,7 @@ A round starts with an automatic strike. A selected card starts a turn, then ano
 - Add a local `GameFlow` with `playing` and `results` states. It owns the active level ID and decides what to do with round completion, restart, retry, and future next-level requests. It has no frame timer.
 - Enter `results` once when `Round` finishes the door-opening or pick-drop animation. Keep loss and win as round outcomes. Present that result through the HUD.
 - Route Retry back to `playing` on the same level. Preserve Restart during play and from the result screen. Both use `loadLevel(id)` and the existing round reset path.
-- Add a Next Level transition when there is a second level or a generator to supply one. Use an SRI autoload for `GameFlow` if it later needs to persist across title, level-select, or gameplay scenes.
+- Next Level advances after a win when the current level has a `nextId`. Restart and Retry reload the current level. Use an SRI autoload for `GameFlow` if it later needs to persist across title, level-select, or gameplay scenes.
 
 ## Verification and delivery
 
@@ -46,7 +46,21 @@ Capture the current behavior before editing and replay the same cases after each
 | Idle and results | Keyboard shortcuts remain available. The round, mesh animations, and HUD perform no recurring work while idle. |
 | Retry | Results close, `GameFlow` goes back to `playing`, and a fresh round starts. |
 | Independent instances | Selecting cards or advancing one machine does not alter another machine or its input level data. |
+| Next Level | Winning in the storage room unlocks the workshop. Winning in the workshop unlocks the generated challenge. Losses and the final level offer Retry only. |
+| Generated challenge | The board has a winning card order and at least one losing first card. Restart and Retry preserve the same pins and card order. |
+| Hint | During card selection, Hint gives the visible slot of a card on a winning path or reports that no winning moves remain. |
+| Undo | Between animations or after a loss, restore the hand, board, attempts, and rotor before the last card played. Repeated Undo stops at the opening strike. |
+
+### Verification status
+
+- 2026-11-20. The current Lua modules passed baseline parity, win and loss sequences, FIFO queueing, restart across animation phases, slow-frame transitions, independent instances, and Retry. With stubbed SRI APIs, the entry point also passed HUD callbacks, keyboard restart, shock reset, and idle and results update checks.
+- SRI project validation and packaging passed. All 12 Lua files in the staged package matched the project source. The extracted puzzle rules also passed direct tests for wraparound in both directions, outcome precedence, and independent board snapshots.
+- The progression checks passed using the game entry point and stubbed SRI APIs. They cover Next Level visibility and gating, the workshop win and loss, rebuilding sockets, and Retry and Restart on the current level. The packaged Lua scripts and HUD document matched the source.
+- The solver matched round outcomes for 16 positions across both levels and two test boards. Stubbed SRI checks covered hint visibility, dead-end feedback, clearing hints on play or restart, and level progression. All 14 packaged Lua and RmlUi files matched the source.
+- Exhaustive generator checks found 432 distinct puzzles across 1,320 random choice sequences. Every puzzle could be won and had a losing first card. Stubbed SRI checks covered progression, Hint, and replaying the same challenge after Restart and Retry. All 15 packaged Lua and RmlUi files matched source.
+- Undo passed 96 serial and queued move cases covering card order, loss recovery, wraparound, and history reset. Stubbed SRI checks verified the restored rotor, pick, pin lights, hint text, HUD, and level progression. All 16 packaged Lua and UI files matched source.
+- The packaged SRI runtime passed an automated run across engine frames covering all three levels, queued cards, win and loss, Restart during rotation and shock, Hint, Undo, Retry, and Next Level. The test used the real engine and called the game action handlers from Lua. An untouched package also reached the Storage Room ready state without engine errors. Mouse interaction and visual appearance still require a manual check. The verified package was copied to `build/`.
 
 After the runtime checks pass, refresh `build/lockpick_puzzle.exe` and its accompanying files. SRI requires the packaging output to be outside the project. Stage the build there, then copy the verified package into `build/`.
 
-Springs, linked sockets, undo, hints, level generation, and new scenes are follow-on work. When a solver or generator needs the puzzle rules, extract a pure transition function that can run without phase timers or rendering.
+Springs, linked sockets, and new scenes are follow-on work. Round records a checkpoint before each card begins its turn, reconstructing the hand from pending selections so queued cards can be undone individually. Restart and Next Level clear the history. [PuzzleGenerator.lua](content/Scripts/Lockpick/PuzzleGenerator.lua) reserves a winning route before placing occupied sockets and shuffling the cards. Its three distinct positive moves from 1 to 4 keep the route within the ten-socket board. GameFlow retains the generated puzzle until the player changes level. [PuzzleSolver.lua](content/Scripts/Lockpick/PuzzleSolver.lua) powers Hint by checking the remaining card order with the same puzzle rules used by Round. A solver or generator can use [PuzzleRules.lua](content/Scripts/Lockpick/PuzzleRules.lua) to initialize occupancy, resolve a rotation to a socket, and simulate a strike without phase timers or rendering. A strike returns a fresh board, the remaining attempts, and any win or loss outcome. Round still controls when the outcome appears in the game.

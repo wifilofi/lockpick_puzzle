@@ -9,16 +9,21 @@
         <h1 id="level"></h1>
         <p id="attempts"></p>
     </div>
-    <button id="restart">Restart [R]</button>
+    <div id="round-actions">
+        <button id="undo" class="hidden">Undo</button>
+        <button id="restart">Restart [R]</button>
+    </div>
     <div id="controls">
         <p id="message"></p>
         <button id="card1" class="card"></button>
         <button id="card2" class="card"></button>
         <button id="card3" class="card"></button>
+        <button id="hint" class="hidden">Hint</button>
     </div>
     <div id="result" class="hidden">
         <h1 id="outcome"></h1>
         <button id="replay">Restart [R]</button>
+        <button id="next-level" class="hidden">Next Level</button>
     </div>
 </body>
 </rml>

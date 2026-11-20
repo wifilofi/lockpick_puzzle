@@ -118,7 +118,7 @@ function LockView:restart(round)
     self:buildSockets(round.socketCount)
     for index, live in ipairs(round.occupied) do self:setPin(index, live) end
     self.hinge:SetEulerAngles(v(0, 0, 0))
-    self:setAngle(0)
+    self:setAngle(round.angleTo)
     self:setPick(0, PICK_REST, PICK_Z, 0)
 end
 
