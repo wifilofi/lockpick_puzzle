@@ -9,7 +9,10 @@
         <h1 id="level"></h1>
         <p id="attempts"></p>
     </div>
-    <button id="restart">Restart [R]</button>
+    <div id="round-actions">
+        <button id="undo" class="hidden">Undo</button>
+        <button id="restart">Restart [R]</button>
+    </div>
     <div id="controls">
         <p id="message"></p>
         <button id="card1" class="card"></button>

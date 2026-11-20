@@ -39,11 +39,22 @@ local function requestHint()
     hud:showHint(slot)
 end
 
+local function undo()
+    if flow:undo() then refreshRound() end
+end
+
 function OnStart()
     flow = GameFlow.new(LEVEL, Log.info)
     round = flow.round
     view = LockView.new()
-    hud = Hud.new(selectCard, restart, retry, advance, requestHint)
+    hud = Hud.new({
+        selectCard = selectCard,
+        restart = restart,
+        retry = retry,
+        advance = advance,
+        requestHint = requestHint,
+        undo = undo,
+    })
     refreshRound()
     hud:show()
 end

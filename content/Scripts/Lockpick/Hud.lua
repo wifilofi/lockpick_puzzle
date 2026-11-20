@@ -16,7 +16,7 @@ local HUD_RESULTS = {
     lost = "Shock! That socket was occupied.",
 }
 
-function Hud.new(selectCard, restart, retry, advance, requestHint)
+function Hud.new(actions)
     local document = assert(UI.LoadDocument("game/UI/Lockpick.rml"))
     local self = setmetatable({
         document = document,
@@ -24,26 +24,27 @@ function Hud.new(selectCard, restart, retry, advance, requestHint)
         attemptsLabel = assert(document:GetElement("attempts")),
         message = assert(document:GetElement("message")),
         hintButton = assert(document:GetElement("hint")),
+        undoButton = assert(document:GetElement("undo")),
         result = assert(document:GetElement("result")),
         resultText = assert(document:GetElement("outcome")),
         nextLevelButton = assert(document:GetElement("next-level")),
         cardButtons = {},
         visibleCards = {},
         controls = assert(Input.GetContext("Lockpick")),
-        selectCard = selectCard,
-        restart = restart,
+        actions = actions,
     }, Hud)
 
     for slot = 1, CARD_SLOTS do
         local id = "card" .. slot
         self.cardButtons[slot] = assert(document:GetElement(id))
-        assert(document:On(id, "click", function() selectCard(slot) end))
+        assert(document:On(id, "click", function() actions.selectCard(slot) end))
         self.controls:BindAction(id, PhysicalKey["Num" .. slot])
     end
-    assert(document:On("restart", "click", restart))
-    assert(document:On("replay", "click", retry))
-    assert(document:On("next-level", "click", advance))
-    assert(document:On("hint", "click", requestHint))
+    assert(document:On("restart", "click", actions.restart))
+    assert(document:On("replay", "click", actions.retry))
+    assert(document:On("next-level", "click", actions.advance))
+    assert(document:On("hint", "click", actions.requestHint))
+    assert(document:On("undo", "click", actions.undo))
     self.controls:BindAction("restart", PhysicalKey.R)
     return self
 end
@@ -54,11 +55,11 @@ end
 
 function Hud:pollInput()
     if self.controls:Pressed("restart") then
-        self.restart()
+        self.actions.restart()
         return true
     end
     for slot = 1, CARD_SLOTS do
-        if self.controls:Pressed("card" .. slot) then self.selectCard(slot) end
+        if self.controls:Pressed("card" .. slot) then self.actions.selectCard(slot) end
     end
     return false
 end
@@ -66,6 +67,7 @@ end
 function Hud:showHint(slot)
     local text = slot and ("Try card [%d]."):format(slot) or "No winning moves left. Restart to try again."
     assert(self.message:SetText(text))
+    self.displayedStatus = nil
 end
 
 function Hud:update(round, canAdvance)
@@ -85,6 +87,11 @@ function Hud:update(round, canAdvance)
     if self.displayedHintAvailable ~= canHint then
         self.displayedHintAvailable = canHint
         assert(self.hintButton:SetClass("hidden", not canHint))
+    end
+    local canUndo = round:canUndo()
+    if self.displayedUndoAvailable ~= canUndo then
+        self.displayedUndoAvailable = canUndo
+        assert(self.undoButton:SetClass("hidden", not canUndo))
     end
     local outcome = HUD_RESULTS[round.result] or ""
     if self.displayedOutcome ~= outcome then

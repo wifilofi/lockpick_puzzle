@@ -37,6 +37,12 @@ function GameFlow:retry()
     return true
 end
 
+function GameFlow:undo()
+    if not self.round:undo() then return false end
+    self.gameStateMachine:transitionTo(GameState.PLAYING)
+    return true
+end
+
 function GameFlow:nextLevelId()
     if self.gameStateMachine.currentState ~= GameState.RESULTS or self.round.result ~= "won" then
         return nil
