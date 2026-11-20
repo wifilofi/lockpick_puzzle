@@ -4,8 +4,11 @@
     <link type="text/rcss" href="engine/ui/base.rcss" />
     <link type="text/rcss" href="Lockpick.rcss" />
     <link type="text/rcss" href="Phone.rcss" />
+    <link type="text/rcss" href="Hand.rcss" />
 </head>
 <body>
+    <div id="pick-hand-pivot" class="hidden"><div id="pick-hand-art"></div></div>
+    <div id="falling-pick-pivot" class="hidden"><div id="falling-pick-art"></div></div>
     <div id="header">
         <h1 id="level"></h1>
         <p id="attempts"></p>

@@ -1,11 +1,12 @@
 local GameFlow = require("Scripts.Lockpick.GameFlow")
 local LockView = require("Scripts.Lockpick.LockView")
+local PickHandView = require("Scripts.Lockpick.PickHandView")
 local Hud = require("Scripts.Lockpick.Hud")
 local PuzzleSolver = require("Scripts.Lockpick.PuzzleSolver")
 
 local LEVEL = "storage"
 
-local flow, round, view, hud
+local flow, round, view, hand, hud
 
 local function refreshHud()
     hud:update(round, flow:nextLevelId() ~= nil)
@@ -17,6 +18,7 @@ end
 
 local function refreshRound()
     view:restart(round)
+    hand:reset()
     refreshHud()
 end
 
@@ -56,6 +58,8 @@ function OnStart()
         requestHint = requestHint,
         undo = undo,
     })
+    local camera = assert(Scene.FindByName("Play camera"), "Missing play camera")
+    hand = PickHandView.new(hud.document, camera, view:pickContact())
     refreshRound()
     hud:show()
 end
@@ -66,6 +70,7 @@ function OnUpdate(dt)
     local previousStatus, previousAttempts, previousResult = round.status, round.attempts, round.result
     local phase, progress, elapsed = round:update(dt)
     view:update(round, phase, progress, elapsed)
+    hand:update(round, phase, progress, elapsed)
     if round.result ~= previousResult then flow:roundFinished() end
     if round.status ~= previousStatus or round.attempts ~= previousAttempts or round.result ~= previousResult then
         refreshHud()
