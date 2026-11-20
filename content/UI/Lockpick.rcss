@@ -25,14 +25,6 @@ button:hover {
     background-color: #4b4134;
     border-color: #e4b36b;
 }
-#round-actions {
-    position: absolute;
-    top: 14dp;
-    right: 18dp;
-}
-#round-actions button {
-    font-size: 14dp;
-}
 #controls {
     position: absolute;
     bottom: 14dp;
