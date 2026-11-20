@@ -1,3 +1,11 @@
+@keyframes hud-rise {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0%); }
+}
+#card-panel, #phone {
+    animation: 0.34s cubic-out hud-rise;
+}
+
 body {
     color: #f4eee2;
     pointer-events: none;

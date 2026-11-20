@@ -33,6 +33,8 @@
     background-color: #101010;
     decorator: image("Phone/phone_bg.png");
     color: white;
+    font-family: Sony Sketch EF;
+    font-weight: bold;
     text-align: center;
 }
 #phone-glass {
@@ -45,53 +47,74 @@
     opacity: 0.20;
     pointer-events: none;
 }
-#phone-label {
+#phone-label, #phone-select {
     position: absolute;
-    top: 4%;
-    left: 2%;
-    width: 96%;
+    left: 4%;
+    width: 92%;
     margin: 0;
-    font-size: 1.4vh;
     white-space: nowrap;
     pointer-events: none;
 }
+#phone-label {
+    top: 3.5%;
+    font-size: 1.39vh;
+}
+#phone-select {
+    top: 90%;
+    font-size: 1.02vh;
+}
 .phone-icon {
     position: absolute;
-    top: 21%;
-    width: 29%;
-    height: 25%;
+    width: 30%;
+    height: 24.74%;
     margin: 0;
     padding: 0;
-    border: 1dp transparent;
-    border-radius: 0.45vh;
+    box-sizing: border-box;
+    border: 1.5dp transparent;
+    border-radius: 0.56vh;
     background-color: transparent;
     pointer-events: auto;
 }
+.phone-col-1 { left: 5%; }
+.phone-col-2 { left: 35%; }
+.phone-col-3 { left: 65%; }
+.phone-row-1 { top: 15.46%; }
+.phone-row-2 { top: 40.20%; }
+.phone-row-3 { top: 64.95%; }
 .phone-icon:hover, .phone-icon:focus-visible {
-    background-color: #eb892922;
+    background-color: transparent;
     border-color: #eb8929;
 }
+.phone-icon:hover .phone-glyph, .phone-icon:focus-visible .phone-glyph {
+    image-color: #eb8929;
+    transform: scale(1.3);
+}
 .phone-icon.unavailable {
-    opacity: 0.34;
     focus: none;
 }
+.phone-icon.unavailable .phone-glyph {
+    image-color: #646464;
+}
 .phone-icon.unavailable:hover {
-    background-color: transparent;
-    border-color: #a3a3a3;
+    border-color: #646464;
+}
+.phone-icon.passive {
+    pointer-events: none;
 }
 .phone-glyph {
     position: absolute;
-    left: 14%;
-    top: 14%;
-    width: 72%;
-    height: 72%;
+    left: 14.58%;
+    top: 14.58%;
+    width: 70.84%;
+    height: 70.84%;
     pointer-events: none;
 }
-#undo { left: 4%; }
-#hint { left: 35.5%; }
-#restart { left: 67%; }
-#next-level { top: 54%; left: 35.5%; }
 #undo .phone-glyph { decorator: image("Phone/ico_undo.png" contain); }
 #hint .phone-glyph { decorator: image("Phone/ico_hint.png" contain); }
 #restart .phone-glyph { decorator: image("Phone/ico_restart.png" contain); }
+#phone-random .phone-glyph { decorator: image("Phone/ico_random.png" contain); }
+#phone-home .phone-glyph { decorator: image("Phone/ico_menu.png" contain); }
+#phone-info .phone-glyph { decorator: image("Phone/ico_info.png" contain); }
+#phone-previous .phone-glyph { decorator: image("Phone/ico_previous.png" contain); }
 #next-level .phone-glyph { decorator: image("Phone/ico_next.png" contain); }
+#phone-deaths .phone-glyph { decorator: image("Phone/ico_deaths.png" contain); }
