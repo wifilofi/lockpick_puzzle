@@ -32,6 +32,7 @@
     <div id="result" class="hidden">
         <h1 id="outcome"></h1>
     </div>
+    <div id="loss-dim"></div>
     <div id="phone">
         <div id="phone-base"></div>
         <div id="phone-lid"></div>

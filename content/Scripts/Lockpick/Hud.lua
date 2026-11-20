@@ -27,6 +27,7 @@ function Hud.new(actions)
         springHelp = assert(document:GetElement("spring-help")),
         message = assert(document:GetElement("message")),
         result = assert(document:GetElement("result")),
+        lossDim = assert(document:GetElement("loss-dim")),
         resultText = assert(document:GetElement("outcome")),
         controls = assert(Input.GetContext("Lockpick")),
         actions = actions,
@@ -86,6 +87,11 @@ function Hud:update(round, canAdvance)
         self.displayedOutcome = outcome
         assert(self.resultText:SetText(outcome))
         assert(self.result:SetClass("hidden", outcome == ""))
+    end
+    local lost = round.result == "lost"
+    if self.displayedLossDim ~= lost then
+        assert(self.lossDim:SetClass("dimmed", lost))
+        self.displayedLossDim = lost
     end
     self.phonePanel:update(round, canAdvance)
     self.cardPanel:update(round.hand, round.handSlots, round.cardCount)

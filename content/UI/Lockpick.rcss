@@ -108,6 +108,21 @@ button:hover {
     text-align: center;
     padding: 12dp 0;
 }
+#loss-dim {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: black;
+    opacity: 0;
+    pointer-events: none;
+}
+#loss-dim.dimmed {
+    opacity: 0.5;
+    transition: opacity 0.35s quadratic-out;
+}
 .hidden {
     display: none;
 }
