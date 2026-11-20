@@ -3,6 +3,7 @@
     <title>Lockpick Puzzle</title>
     <link type="text/rcss" href="engine/ui/base.rcss" />
     <link type="text/rcss" href="Lockpick.rcss" />
+    <link type="text/rcss" href="Phone.rcss" />
 </head>
 <body>
     <div id="header">
@@ -10,10 +11,6 @@
         <p id="attempts"></p>
         <p id="link-help" class="hidden">Matching dots link two sockets. A strike sets both pins.</p>
         <p id="spring-help" class="hidden">A bar marks a spring pin. It releases when the lock turns.</p>
-    </div>
-    <div id="round-actions">
-        <button id="undo" class="hidden">Undo</button>
-        <button id="restart">Restart [R]</button>
     </div>
     <div id="card-panel">
         <button id="card1" class="card column-1 row-1 hidden"><span id="card-value1" class="card-value"></span></button>
@@ -28,12 +25,21 @@
     </div>
     <div id="controls">
         <p id="message"></p>
-        <button id="hint" class="hidden">Hint</button>
     </div>
     <div id="result" class="hidden">
         <h1 id="outcome"></h1>
-        <button id="replay">Restart [R]</button>
-        <button id="next-level" class="hidden">Next Level</button>
+    </div>
+    <div id="phone">
+        <div id="phone-base"></div>
+        <div id="phone-lid"></div>
+        <div id="phone-screen">
+            <p id="phone-label"></p>
+            <button id="undo" class="phone-icon unavailable"><span class="phone-glyph"></span></button>
+            <button id="hint" class="phone-icon unavailable"><span class="phone-glyph"></span></button>
+            <button id="restart" class="phone-icon"><span class="phone-glyph"></span></button>
+            <button id="next-level" class="phone-icon unavailable"><span class="phone-glyph"></span></button>
+            <div id="phone-glass"></div>
+        </div>
     </div>
 </body>
 </rml>

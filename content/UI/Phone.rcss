@@ -1,0 +1,97 @@
+#phone {
+    /* The two original photographs share a hinge. The base extends below the stage. */
+    position: absolute;
+    right: 0.55vw;
+    bottom: -19.25vh;
+    width: 36.41vh;
+    height: 77.56vh;
+    pointer-events: none;
+}
+#phone-base, #phone-lid {
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+#phone-base {
+    top: 44.22%;
+    height: 55.78%;
+    decorator: image("Phone/SPR_LockPhone_Down.png");
+}
+#phone-lid {
+    top: 0;
+    height: 45.03%;
+    decorator: image("Phone/SPR_LockPhone_Up.png");
+}
+#phone-screen {
+    position: absolute;
+    left: 29%;
+    top: 8.6%;
+    width: 40.69%;
+    height: 23.16%;
+    border-radius: 0.55vh;
+    overflow: hidden;
+    background-color: #101010;
+    decorator: image("Phone/phone_bg.png");
+    color: white;
+    text-align: center;
+}
+#phone-glass {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    decorator: image("Phone/SPR_Phone_Dirt.png");
+    opacity: 0.20;
+    pointer-events: none;
+}
+#phone-label {
+    position: absolute;
+    top: 4%;
+    left: 2%;
+    width: 96%;
+    margin: 0;
+    font-size: 1.4vh;
+    white-space: nowrap;
+    pointer-events: none;
+}
+.phone-icon {
+    position: absolute;
+    top: 21%;
+    width: 29%;
+    height: 25%;
+    margin: 0;
+    padding: 0;
+    border: 1dp transparent;
+    border-radius: 0.45vh;
+    background-color: transparent;
+    pointer-events: auto;
+}
+.phone-icon:hover, .phone-icon:focus-visible {
+    background-color: #eb892922;
+    border-color: #eb8929;
+}
+.phone-icon.unavailable {
+    opacity: 0.34;
+    focus: none;
+}
+.phone-icon.unavailable:hover {
+    background-color: transparent;
+    border-color: #a3a3a3;
+}
+.phone-glyph {
+    position: absolute;
+    left: 14%;
+    top: 14%;
+    width: 72%;
+    height: 72%;
+    pointer-events: none;
+}
+#undo { left: 4%; }
+#hint { left: 35.5%; }
+#restart { left: 67%; }
+#next-level { top: 54%; left: 35.5%; }
+#undo .phone-glyph { decorator: image("Phone/ico_undo.png" contain); }
+#hint .phone-glyph { decorator: image("Phone/ico_hint.png" contain); }
+#restart .phone-glyph { decorator: image("Phone/ico_restart.png" contain); }
+#next-level .phone-glyph { decorator: image("Phone/ico_next.png" contain); }

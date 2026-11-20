@@ -1,4 +1,5 @@
 local CardPanel = require("Scripts.Lockpick.CardPanel")
+local PhonePanel = require("Scripts.Lockpick.PhonePanel")
 
 local Hud = {}
 Hud.__index = Hud
@@ -25,21 +26,14 @@ function Hud.new(actions)
         linkHelp = assert(document:GetElement("link-help")),
         springHelp = assert(document:GetElement("spring-help")),
         message = assert(document:GetElement("message")),
-        hintButton = assert(document:GetElement("hint")),
-        undoButton = assert(document:GetElement("undo")),
         result = assert(document:GetElement("result")),
         resultText = assert(document:GetElement("outcome")),
-        nextLevelButton = assert(document:GetElement("next-level")),
         controls = assert(Input.GetContext("Lockpick")),
         actions = actions,
     }, Hud)
 
     self.cardPanel = CardPanel.new(document, self.controls, actions.selectCard)
-    assert(document:On("restart", "click", actions.restart))
-    assert(document:On("replay", "click", actions.retry))
-    assert(document:On("next-level", "click", actions.advance))
-    assert(document:On("hint", "click", actions.requestHint))
-    assert(document:On("undo", "click", actions.undo))
+    self.phonePanel = PhonePanel.new(document, actions)
     self.controls:BindAction("restart", PhysicalKey.R)
     return self
 end
@@ -87,26 +81,13 @@ function Hud:update(round, canAdvance)
         self.displayedStatus = round.status
         assert(self.message:SetText(HUD_STATUS[round.status] or ""))
     end
-    local canHint = round:isReady()
-    if self.displayedHintAvailable ~= canHint then
-        self.displayedHintAvailable = canHint
-        assert(self.hintButton:SetClass("hidden", not canHint))
-    end
-    local canUndo = round:canUndo()
-    if self.displayedUndoAvailable ~= canUndo then
-        self.displayedUndoAvailable = canUndo
-        assert(self.undoButton:SetClass("hidden", not canUndo))
-    end
     local outcome = HUD_RESULTS[round.result] or ""
     if self.displayedOutcome ~= outcome then
         self.displayedOutcome = outcome
         assert(self.resultText:SetText(outcome))
         assert(self.result:SetClass("hidden", outcome == ""))
     end
-    if self.displayedNextLevel ~= canAdvance then
-        self.displayedNextLevel = canAdvance
-        assert(self.nextLevelButton:SetClass("hidden", not canAdvance))
-    end
+    self.phonePanel:update(round, canAdvance)
     self.cardPanel:update(round.hand, round.handSlots, round.cardCount)
 end
 
