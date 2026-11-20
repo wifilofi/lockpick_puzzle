@@ -5,18 +5,22 @@ LockView.__index = LockView
 
 local FLASH_TIME, FLASH_INTENSITY = 0.22, 5.5
 local BULB_INTENSITY = 1.7
-local LOCK_Y, SOCKET_RADIUS, PICK_Z = 0.44, 0.97, 0.27
-local DOOR_X, DOOR_Z = -2.3, -0.55
+-- Unity stage pixels at the closed door, mapped to SRI's fixed play camera.
+local PIXEL = 2 * 7.2 * math.tan(0.72 / 2) / 1080
+local LOCK_Y = 0.05 + (540 - 379) * PIXEL
+local SOCKET_RADIUS = 180.8 * PIXEL
+local HINGE_TO_LOCK = 992 * PIXEL
+local FACE_Z = 0.052
 local CUBE = "engine/primitives/cube/model.obj"
 local CYLINDER = "game/Meshes/Cylinder.obj"
-local STEEL = "engine/primitives/default.material-instance.json"
+local QUAD = "game/Meshes/LockSprite.obj"
+local PLATE = "game/Meshes/LockRing.obj"
 
 local function material(name)
-    return "game/Materials/" .. name .. ".material-instance.json"
+    return "game/Materials/Port/" .. name .. ".material-instance.json"
 end
 
-local GALVANIZED_STEEL = material("GalvanizedSteel")
-local DARK, RUSTED_STEEL, LIVE, SHOCK = material("Dark"), material("RustedSteel"), material("Live"), material("Shock")
+local DARK = "game/Materials/Dark.material-instance.json"
 local function v(x, y, z)
     return Vector3.new(x, y, z)
 end
@@ -28,6 +32,10 @@ local function part(name, mesh, finish, position, scale, parent)
         scale = scale,
         components = { MeshRenderer = { mesh = mesh, materialInstance = finish } },
     })
+end
+
+local function sprite(name, position, width, height, parent, mesh)
+    return part(name, mesh or QUAD, material(name), position, v(width, height, 1), parent)
 end
 
 local function pointLight(name, position, color, range, parent)
@@ -42,38 +50,51 @@ local function setLightIntensity(light, intensity)
     light:SetComponent("PointLight", { intensity = intensity })
 end
 
+local function smoothstep(value)
+    return value * value * (3 - 2 * value)
+end
+
+local function handlePull(open)
+    if open < 0.55 then return smoothstep(open / 0.55) end
+    if open < 0.75 then return 1 - smoothstep((open - 0.55) / 0.20) end
+    return 0
+end
+
 function LockView.new()
     local self = setmetatable({ sockets = {}, socketMarkers = {} }, LockView)
-    self.hinge = Scene.Spawn("Door hinge", { position = v(DOOR_X, 0, DOOR_Z) })
-    part("Door", CUBE, GALVANIZED_STEEL, v(2.3, 0.1, 0), v(4.6, 4.95, 0.30), self.hinge)
-    part("Door trim", CUBE, STEEL, v(2.3, 2.42, 0.03), v(4.63, 0.09, 0.31), self.hinge)
-    part("Lock escutcheon", CYLINDER, RUSTED_STEEL, v(2.3, LOCK_Y, 0.32), v(1.49, 1.49, 0.18), self.hinge)
-    self.rotor = Scene.Spawn("Lock rotor", { parent = self.hinge, position = v(2.3, LOCK_Y, 0.57) })
-    part("Lock plug", CYLINDER, GALVANIZED_STEEL, v(0, 0, 0), v(1.29, 1.29, 0.28), self.rotor)
-    part("Keyway", CUBE, DARK, v(0, 0, 0.145), v(0.16, 0.43, 0.045), self.rotor)
+    local artSize = 756 * 0.8 * PIXEL
+    self.hinge = Scene.Spawn("Door hinge", { position = v(-HINGE_TO_LOCK, 0, 0) })
+    sprite("Door", v(512 * PIXEL, -101 * PIXEL, 0), 1024 * PIXEL, 1810 * PIXEL, self.hinge)
+    self.handle = Scene.Spawn("Handle pivot", {
+        parent = self.hinge,
+        position = v(HINGE_TO_LOCK + 0.22, LOCK_Y - 0.08, 0.014),
+    })
+    local handleWidth, handleHeight = 1024 * 0.9384 * PIXEL, 256 * 0.9384 * PIXEL
+    sprite("Handle", v(handleWidth * (0.5 - 0.18997), handleHeight * (0.5 - 0.43342), 0),
+        handleWidth, handleHeight, self.handle)
 
-    self.marker = part("Contact marker", CUBE, RUSTED_STEEL, v(0, LOCK_Y - 1.28, PICK_Z), v(0.39, 0.082, 0.10))
-    self.shockFlash = pointLight("Shock flash", v(0, LOCK_Y - SOCKET_RADIUS, 0.95), v(1, 0.78, 0.50), 3.9)
+    sprite("Lock backing", v(HINGE_TO_LOCK, LOCK_Y, 0.026), artSize, artSize, self.hinge)
+    self.rotor = Scene.Spawn("Lock rotor", { parent = self.hinge, position = v(HINGE_TO_LOCK, LOCK_Y, 0.037) })
+    sprite("Lock plate", v(0, 0, 0), artSize, artSize, self.rotor, PLATE)
+    sprite("Lock plug", v(0, 0, 0.005), artSize, artSize, self.rotor)
+    self.marker = sprite("Contact ring", v(0, LOCK_Y - SOCKET_RADIUS, FACE_Z + 0.013), 0.52, 0.52)
+    self.shockFlash = pointLight("Shock flash", v(0, LOCK_Y - SOCKET_RADIUS, 0.85), v(1, 0.78, 0.50), 3.9)
     return self
 end
 
 function LockView:buildSockets(count)
     if #self.sockets == count then return end
-    for _, socket in ipairs(self.sockets) do
-        Scene.Destroy(socket.mesh)
-        Scene.Destroy(socket.pin)
-        Scene.Destroy(socket.bulb)
-    end
+    for _, socket in ipairs(self.sockets) do Scene.Destroy(socket.root) end
     self.sockets = {}
     self.displayedOccupancy = nil
-    for i = 1, count do
-        local radians = (i - 1) * 2 * math.pi / count
-        local x = SOCKET_RADIUS * math.sin(radians)
-        local y = -SOCKET_RADIUS * math.cos(radians)
-        self.sockets[i] = {
-            mesh = part("Socket " .. i, CYLINDER, DARK, v(x, y, 0.158), v(0.148, 0.148, 0.045), self.rotor),
-            pin = part("Live pin " .. i, CYLINDER, LIVE, v(x, y, 0.147), v(0.095, 0.095, 0.025), self.rotor),
-            bulb = pointLight("Pin bulb " .. i, v(x, y, 0.40), v(0.15, 0.65, 1), 0.80, self.rotor),
+    for index = 1, count do
+        local radians = (index - 1) * 2 * math.pi / count
+        local x, y = SOCKET_RADIUS * math.sin(radians), -SOCKET_RADIUS * math.cos(radians)
+        local root = Scene.Spawn("Socket " .. index, { parent = self.rotor, position = v(x, y, 0.015) })
+        sprite("Socket bore", v(0, 0, 0), 0.43, 0.43, root)
+        self.sockets[index] = {
+            root = root,
+            bulb = pointLight("Pin bulb " .. index, v(0, 0, 0.30), v(0.15, 0.65, 1), 0.80, root),
         }
     end
 end
@@ -84,14 +105,13 @@ function LockView:showSocketMarkers(linkPairs, springs, count)
     self.socketMarkers = {}
     self.linkPairs, self.springs, self.markerSocketCount = linkPairs, springs, count
 
-    -- Give the two sockets in each pair the same number of dots.
     for group, pair in ipairs(linkPairs) do
         for _, socket in ipairs(pair) do
             local radians = (socket - 1) * 2 * math.pi / count
             local sine, cosine = math.sin(radians), math.cos(radians)
             for dot = 1, group do
                 local offset = (dot - (group + 1) / 2) * 0.085
-                local position = v(0.75 * sine + offset * cosine, -0.75 * cosine + offset * sine, 0.172)
+                local position = v(0.70 * sine + offset * cosine, -0.70 * cosine + offset * sine, 0.022)
                 self.socketMarkers[#self.socketMarkers + 1] = part(
                     ("Link %d socket %d dot %d"):format(group, socket, dot),
                     CYLINDER, DARK, position, v(0.036, 0.036, 0.025), self.rotor)
@@ -101,46 +121,44 @@ function LockView:showSocketMarkers(linkPairs, springs, count)
     for _, socket in ipairs(springs) do
         local radians = (socket - 1) * 2 * math.pi / count
         local marker = part("Spring socket " .. socket, CUBE, DARK,
-            v(0.61 * math.sin(radians), -0.61 * math.cos(radians), 0.172),
+            v(0.56 * math.sin(radians), -0.56 * math.cos(radians), 0.022),
             v(0.20, 0.045, 0.025), self.rotor)
         marker:SetEulerAngles(v(0, 0, math.deg(radians)))
         self.socketMarkers[#self.socketMarkers + 1] = marker
     end
 end
 
-function LockView:setPin(index, live)
-    local socket = self.sockets[index]
-    if socket.live == live then return end
-    socket.live = live
-    local p = socket.pin:GetPosition()
-    socket.pin:SetPosition(v(p.x, p.y, live and 0.211 or 0.125))
-    setLightIntensity(socket.bulb, live and BULB_INTENSITY or 0)
-end
-
 function LockView:syncPins(occupied)
     if self.displayedOccupancy == occupied then return end
-    for index, live in ipairs(occupied) do self:setPin(index, live) end
+    for index, live in ipairs(occupied) do
+        local socket = self.sockets[index]
+        if socket.live ~= live then
+            socket.live = live
+            if live then
+                socket.pin = sprite("Live pin", v(0, 0, 0.004), 0.24, 0.24, socket.root)
+            elseif socket.pin then
+                Scene.Destroy(socket.pin)
+                socket.pin = nil
+            end
+            setLightIntensity(socket.bulb, live and BULB_INTENSITY or 0)
+        end
+    end
     self.displayedOccupancy = occupied
 end
 
-function LockView:setAngle(steps)
-    self.rotor:SetEulerAngles(v(0, 0, -steps * 360 / #self.sockets))
+function LockView:setAngle(steps, extraDegrees)
+    local degrees = steps * 360 / #self.sockets + (extraDegrees or 0)
+    self.rotor:SetEulerAngles(v(0, 0, -degrees))
+    for _, socket in ipairs(self.sockets) do socket.root:SetEulerAngles(v(0, 0, degrees)) end
 end
 
 function LockView:pickContact()
-    return v(0, LOCK_Y - SOCKET_RADIUS, PICK_Z)
+    return v(0, LOCK_Y - SOCKET_RADIUS, FACE_Z)
 end
 
 function LockView:setShock(index)
     if self.shockedSocket == index then return end
-    if self.shockedSocket then
-        self.sockets[self.shockedSocket].mesh:SetComponent("MeshRenderer", { materialInstance = DARK })
-    end
     self.shockedSocket = index
-    self.marker:SetComponent("MeshRenderer", { materialInstance = index and SHOCK or RUSTED_STEEL })
-    if index then
-        self.sockets[index].mesh:SetComponent("MeshRenderer", { materialInstance = SHOCK })
-    end
     setLightIntensity(self.shockFlash, index and FLASH_INTENSITY or 0)
 end
 
@@ -150,6 +168,8 @@ function LockView:restart(round)
     self:showSocketMarkers(round.linkPairs, round.springs, round.socketCount)
     self:syncPins(round.occupied)
     self.hinge:SetEulerAngles(v(0, 0, 0))
+    self.handle:SetEulerAngles(v(0, 0, 0))
+    self.marker:SetScale(v(0.52, 0.52, 1))
     self:setAngle(round.angleTo)
 end
 
@@ -165,7 +185,13 @@ function LockView:update(round, phase, progress, elapsed)
         setLightIntensity(self.shockFlash, FLASH_INTENSITY * flash ^ 2)
         if progress == 1 then self:setShock(nil) end
     elseif phase == RoundState.OPEN then
-        self.hinge:SetEulerAngles(v(0, 72 * (1 - (1 - progress)^3), 0))
+        local open = 1 - (1 - progress)^3
+        local pull = handlePull(open)
+        self.handle:SetEulerAngles(v(0, 28 * pull, -22 * pull))
+        self:setAngle(round.angleTo, 90 * open)
+        self.hinge:SetEulerAngles(v(0, 120 * smoothstep(progress), 0))
+        local markerSize = 0.52 * (1 - 0.99 * open)
+        self.marker:SetScale(v(markerSize, markerSize, 1))
     end
 end
 

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "material": {
+    "id": "f8a87599-7107-4a0e-b9b2-938f9d99b2ea",
+    "path": "game/Materials/Port/PhotoCutout.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "d0b5968f-5bea-477b-99a5-fff2c3777d94",
+      "path": "game/Textures/Lock/SPR_Lock_Small.png"
+    },
+    "specularColor": [
+      0,
+      0,
+      0
+    ],
+    "shininess": 0
+  }
+}

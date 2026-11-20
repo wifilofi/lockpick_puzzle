@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "material": {
+    "id": "f8a87599-7107-4a0e-b9b2-938f9d99b2ea",
+    "path": "game/Materials/Port/PhotoCutout.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "c67e3be9-f0ca-44ca-8337-11ebe89a615b",
+      "path": "game/Textures/Lock/SPR_HoleOutline_Cur.png"
+    },
+    "specularColor": [
+      0,
+      0,
+      0
+    ],
+    "shininess": 0
+  }
+}
