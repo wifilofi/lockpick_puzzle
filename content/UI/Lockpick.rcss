@@ -1,0 +1,62 @@
+body {
+    color: #f4eee2;
+    pointer-events: none;
+}
+#header {
+    position: absolute;
+    top: 18dp;
+    left: 22dp;
+}
+#header h1 {
+    margin-bottom: 2dp;
+}
+#attempts {
+    color: #c4c5c9;
+    font-size: 14dp;
+}
+button {
+    pointer-events: auto;
+    background-color: #20242a;
+    border: 1dp #77706a;
+    border-radius: 5dp;
+    color: #fcf2e0;
+}
+button:hover {
+    background-color: #4b4134;
+    border-color: #e4b36b;
+}
+#restart {
+    position: absolute;
+    top: 14dp;
+    right: 18dp;
+    font-size: 14dp;
+}
+#controls {
+    position: absolute;
+    bottom: 14dp;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+#message {
+    font-size: 15dp;
+}
+.card {
+    width: 54dp;
+    padding: 10dp;
+    text-align: center;
+    border-color: #bc945c;
+    font-size: 19dp;
+}
+#result {
+    position: absolute;
+    bottom: 16dp;
+    left: 0;
+    width: 100%;
+    background-color: #20242a;
+    text-align: center;
+    padding: 12dp 0;
+}
+.hidden {
+    display: none;
+}

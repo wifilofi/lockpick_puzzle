@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "activeCamera": "8d528e78-b908-41d3-a6ed-d266d229ed82",
+  "directionalLight": "98ddf4e1-a644-4be9-a402-597cd9adca36",
+  "entities": [
+    {
+      "id": "8d528e78-b908-41d3-a6ed-d266d229ed82",
+      "name": "Play camera",
+      "parent": null,
+      "tags": [],
+      "components": {
+        "Transform": {
+          "position": [
+            0,
+            0.05,
+            7.2
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "Camera": {
+          "fovY": 0.72,
+          "nearPlane": 0.1,
+          "farPlane": 75
+        }
+      }
+    },
+    {
+      "id": "98ddf4e1-a644-4be9-a402-597cd9adca36",
+      "name": "Soft fill",
+      "parent": null,
+      "tags": [],
+      "components": {
+        "Transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            -0.3,
+            0.16,
+            0,
+            0.9404254356406998
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "DirectionalLight": {
+          "color": [
+            0.7,
+            0.79,
+            1.0
+          ],
+          "intensity": 0.42
+        }
+      }
+    },
+    {
+      "id": "80185cd6-a96f-4d86-a1d8-c70ed7d850fb",
+      "name": "Lockpick round",
+      "parent": null,
+      "tags": [],
+      "components": {
+        "Transform": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "Script": {
+          "enabled": true,
+          "properties": {},
+          "script": {
+            "id": "d52478a7-b487-4ee0-8a83-c094d137c9d1",
+            "path": "game/Scripts/Lockpick.lua"
+          }
+        }
+      }
+    },
+    {
+      "id": "d3fb0422-54ed-42fd-af47-0174b0df3c6d",
+      "name": "Blue light",
+      "parent": null,
+      "tags": [],
+      "components": {
+        "Transform": {
+          "position": [
+            -2.85,
+            1.45,
+            2.25
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "PointLight": {
+          "color": [
+            0.12,
+            0.45,
+            1.0
+          ],
+          "intensity": 1.8,
+          "range": 6.0
+        }
+      }
+    },
+    {
+      "id": "7405f9bc-f1dc-4111-816e-eb0b5cfcf3b5",
+      "name": "Orange light",
+      "parent": null,
+      "tags": [],
+      "components": {
+        "Transform": {
+          "position": [
+            2.62,
+            0.82,
+            1.88
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "PointLight": {
+          "color": [
+            1.0,
+            0.4,
+            0.12
+          ],
+          "intensity": 1.7,
+          "range": 5.4
+        }
+      }
+    }
+  ]
+}

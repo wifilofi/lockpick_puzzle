@@ -1,0 +1,6 @@
+{
+  "autoloads": [],
+  "name": "lockpick_puzzle",
+  "startupScene": "game/scenes/main.scene.json",
+  "version": 2
+}

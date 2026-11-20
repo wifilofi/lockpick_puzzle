@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "material": {
+    "id": "37ed2583-96ec-4820-b86c-281450224e4d",
+    "path": "engine/primitives/default.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "7edcf380-138f-426d-8256-a6df84632956",
+      "path": "game/Materials/Rust_16-512x512.png"
+    },
+    "shininess": 22,
+    "specularColor": [
+      0.16,
+      0.14,
+      0.12
+    ]
+  }
+}

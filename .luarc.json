@@ -1,0 +1,10 @@
+{
+  "runtime.path": [
+    "content/?.lua",
+    "content/?/init.lua"
+  ],
+  "runtime.version": "Lua 5.4",
+  "workspace.library": [
+    ".sri/lua"
+  ]
+}

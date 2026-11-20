@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "material": {
+    "id": "37ed2583-96ec-4820-b86c-281450224e4d",
+    "path": "engine/primitives/default.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "5ad8687c-ce97-42ac-8690-7744a1804813",
+      "path": "game/Materials/Shock.png"
+    },
+    "shininess": 18
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "material": {
+    "id": "37ed2583-96ec-4820-b86c-281450224e4d",
+    "path": "engine/primitives/default.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "13a653f6-5dee-43e1-afb4-f5d6648d9b45",
+      "path": "game/Materials/Dark.png"
+    },
+    "shininess": 18
+  }
+}
