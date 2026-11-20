@@ -8,18 +8,43 @@ function PuzzleRules.initialOccupancy(sectors)
     return occupied
 end
 
+local function isSocketIndex(index, socketCount)
+    return math.type(index) == "integer" and index >= 1 and index <= socketCount
+end
+
 function PuzzleRules.linkPartners(pairs, socketCount)
     local partners = {}
     for _, pair in ipairs(pairs) do
         local first, second = pair[1], pair[2]
-        assert(math.type(first) == "integer" and first >= 1 and first <= socketCount
-            and math.type(second) == "integer" and second >= 1 and second <= socketCount,
+        assert(isSocketIndex(first, socketCount) and isSocketIndex(second, socketCount),
             "Linked sockets must be valid socket indices")
         assert(first ~= second and not partners[first] and not partners[second],
             "Each socket can belong to only one pair")
         partners[first], partners[second] = second, first
     end
     return partners
+end
+
+function PuzzleRules.validateSprings(springs, socketCount)
+    local seen = {}
+    for _, socket in ipairs(springs) do
+        assert(isSocketIndex(socket, socketCount), "Spring sockets must be valid socket indices")
+        assert(not seen[socket], "Each spring socket must be listed once")
+        seen[socket] = true
+    end
+end
+
+-- A rotation clears set spring pins and preserves any permanent pins.
+function PuzzleRules.releaseSprings(occupied, springs)
+    if not springs then return occupied end
+    local released
+    for _, socket in ipairs(springs) do
+        if occupied[socket] then
+            released = released or { table.unpack(occupied) }
+            released[socket] = false
+        end
+    end
+    return released or occupied
 end
 
 function PuzzleRules.targetAfterTurn(target, turns, socketCount)

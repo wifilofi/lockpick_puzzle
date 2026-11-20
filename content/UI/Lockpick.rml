@@ -9,6 +9,7 @@
         <h1 id="level"></h1>
         <p id="attempts"></p>
         <p id="link-help" class="hidden">Matching dots link two sockets. A strike sets both pins.</p>
+        <p id="spring-help" class="hidden">A bar marks a spring pin. It releases when the lock turns.</p>
     </div>
     <div id="round-actions">
         <button id="undo" class="hidden">Undo</button>
