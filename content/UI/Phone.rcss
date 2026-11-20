@@ -2,9 +2,9 @@
     /* The two original photographs share a hinge. The base extends below the stage. */
     position: absolute;
     right: 0.55vw;
-    bottom: -19.25vh;
-    width: 36.41vh;
-    height: 77.56vh;
+    bottom: -38.64vh;
+    width: 45.51vh;
+    height: 96.95vh;
     pointer-events: none;
 }
 #phone-base, #phone-lid {
@@ -28,7 +28,7 @@
     top: 8.6%;
     width: 40.69%;
     height: 23.16%;
-    border-radius: 0.55vh;
+    border-radius: 0.69vh;
     overflow: hidden;
     background-color: #101010;
     decorator: image("Phone/phone_bg.png");
@@ -57,11 +57,11 @@
 }
 #phone-label {
     top: 3.5%;
-    font-size: 1.39vh;
+    font-size: 1.74vh;
 }
 #phone-select {
     top: 90%;
-    font-size: 1.02vh;
+    font-size: 1.28vh;
 }
 .phone-icon {
     position: absolute;
@@ -78,16 +78,15 @@
 .phone-col-1 { left: 5%; }
 .phone-col-2 { left: 35%; }
 .phone-col-3 { left: 65%; }
-.phone-row-1 { top: 15.46%; }
-.phone-row-2 { top: 40.20%; }
-.phone-row-3 { top: 64.95%; }
+.phone-row-1 { top: 22%; }
+.phone-row-2 { top: 53%; }
 .phone-icon:hover, .phone-icon:focus-visible {
     background-color: transparent;
     border-color: #eb8929;
 }
 .phone-icon:hover .phone-glyph, .phone-icon:focus-visible .phone-glyph {
     image-color: #eb8929;
-    transform: scale(1.3);
+    transform: translate(-50%, -50%) scale(1.3);
 }
 .phone-icon.unavailable {
     focus: none;
@@ -98,23 +97,34 @@
 .phone-icon.unavailable:hover {
     border-color: #646464;
 }
-.phone-icon.passive {
-    pointer-events: none;
+#next-level.unavailable {
+    display: none;
 }
 .phone-glyph {
     position: absolute;
-    left: 14.58%;
-    top: 14.58%;
-    width: 70.84%;
-    height: 70.84%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     pointer-events: none;
 }
-#undo .phone-glyph { decorator: image("Phone/ico_undo.png" contain); }
-#hint .phone-glyph { decorator: image("Phone/ico_hint.png" contain); }
-#restart .phone-glyph { decorator: image("Phone/ico_restart.png" contain); }
-#phone-random .phone-glyph { decorator: image("Phone/ico_random.png" contain); }
-#phone-home .phone-glyph { decorator: image("Phone/ico_menu.png" contain); }
-#phone-info .phone-glyph { decorator: image("Phone/ico_info.png" contain); }
-#phone-previous .phone-glyph { decorator: image("Phone/ico_previous.png" contain); }
-#next-level .phone-glyph { decorator: image("Phone/ico_next.png" contain); }
-#phone-deaths .phone-glyph { decorator: image("Phone/ico_deaths.png" contain); }
+/* Compensate for the different transparent margins in the four original sprites. */
+#undo .phone-glyph {
+    width: 90%;
+    height: 90%;
+    decorator: image("Phone/ico_undo.png" contain);
+}
+#hint .phone-glyph {
+    width: 61%;
+    height: 61%;
+    decorator: image("Phone/ico_hint.png" contain);
+}
+#restart .phone-glyph {
+    width: 78%;
+    height: 78%;
+    decorator: image("Phone/ico_restart.png" contain);
+}
+#next-level .phone-glyph {
+    width: 76%;
+    height: 76%;
+    decorator: image("Phone/ico_next.png" contain);
+}

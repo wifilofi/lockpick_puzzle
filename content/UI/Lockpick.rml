@@ -37,12 +37,7 @@
             <button id="undo" class="phone-icon phone-col-1 phone-row-1 unavailable"><span class="phone-glyph"></span></button>
             <button id="hint" class="phone-icon phone-col-2 phone-row-1 unavailable"><span class="phone-glyph"></span></button>
             <button id="restart" class="phone-icon phone-col-3 phone-row-1"><span class="phone-glyph"></span></button>
-            <div id="phone-random" class="phone-icon phone-col-1 phone-row-2 unavailable passive"><span class="phone-glyph"></span></div>
-            <div id="phone-home" class="phone-icon phone-col-2 phone-row-2 unavailable passive"><span class="phone-glyph"></span></div>
-            <div id="phone-info" class="phone-icon phone-col-3 phone-row-2 unavailable passive"><span class="phone-glyph"></span></div>
-            <div id="phone-previous" class="phone-icon phone-col-1 phone-row-3 unavailable passive"><span class="phone-glyph"></span></div>
-            <button id="next-level" class="phone-icon phone-col-2 phone-row-3 unavailable"><span class="phone-glyph"></span></button>
-            <div id="phone-deaths" class="phone-icon phone-col-3 phone-row-3 unavailable passive"><span class="phone-glyph"></span></div>
+            <button id="next-level" class="phone-icon phone-col-2 phone-row-2 unavailable"><span class="phone-glyph"></span></button>
             <p id="phone-select">Select</p>
             <div id="phone-glass"></div>
         </div>
