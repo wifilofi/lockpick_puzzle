@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "material": {
+    "id": "f8a87599-7107-4a0e-b9b2-938f9d99b2ea",
+    "path": "game/Materials/Port/PhotoCutout.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "9fc2a573-e4a7-4f56-8e34-4200b229bd36",
+      "path": "game/UI/Title/SPR_Door.png"
+    },
+    "specularColor": [
+      0,
+      0,
+      0
+    ],
+    "shininess": 0
+  }
+}

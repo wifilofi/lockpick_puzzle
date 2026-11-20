@@ -3,7 +3,7 @@ local RoundState = require("Scripts.Lockpick.RoundStates").Id
 local PickHandView = {}
 PickHandView.__index = PickHandView
 
-local REST_DISTANCE = 0.52
+local REST_DISTANCE = 0.67
 local SHOCK_BLINK = 0.045
 local BURN_RECOIL = 0.26
 
