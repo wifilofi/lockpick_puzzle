@@ -16,13 +16,14 @@ local HUD_RESULTS = {
     lost = "Shock! That socket was occupied.",
 }
 
-function Hud.new(selectCard, restart, retry, advance)
+function Hud.new(selectCard, restart, retry, advance, requestHint)
     local document = assert(UI.LoadDocument("game/UI/Lockpick.rml"))
     local self = setmetatable({
         document = document,
         title = assert(document:GetElement("level")),
         attemptsLabel = assert(document:GetElement("attempts")),
         message = assert(document:GetElement("message")),
+        hintButton = assert(document:GetElement("hint")),
         result = assert(document:GetElement("result")),
         resultText = assert(document:GetElement("outcome")),
         nextLevelButton = assert(document:GetElement("next-level")),
@@ -42,6 +43,7 @@ function Hud.new(selectCard, restart, retry, advance)
     assert(document:On("restart", "click", restart))
     assert(document:On("replay", "click", retry))
     assert(document:On("next-level", "click", advance))
+    assert(document:On("hint", "click", requestHint))
     self.controls:BindAction("restart", PhysicalKey.R)
     return self
 end
@@ -61,6 +63,11 @@ function Hud:pollInput()
     return false
 end
 
+function Hud:showHint(slot)
+    local text = slot and ("Try card [%d]."):format(slot) or "No winning moves left. Restart to try again."
+    assert(self.message:SetText(text))
+end
+
 function Hud:update(round, canAdvance)
     if self.displayedName ~= round.name then
         self.displayedName = round.name
@@ -73,6 +80,11 @@ function Hud:update(round, canAdvance)
     if self.displayedStatus ~= round.status then
         self.displayedStatus = round.status
         assert(self.message:SetText(HUD_STATUS[round.status] or ""))
+    end
+    local canHint = round:isReady()
+    if self.displayedHintAvailable ~= canHint then
+        self.displayedHintAvailable = canHint
+        assert(self.hintButton:SetClass("hidden", not canHint))
     end
     local outcome = HUD_RESULTS[round.result] or ""
     if self.displayedOutcome ~= outcome then

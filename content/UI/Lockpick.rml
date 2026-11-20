@@ -15,6 +15,7 @@
         <button id="card1" class="card"></button>
         <button id="card2" class="card"></button>
         <button id="card3" class="card"></button>
+        <button id="hint" class="hidden">Hint</button>
     </div>
     <div id="result" class="hidden">
         <h1 id="outcome"></h1>

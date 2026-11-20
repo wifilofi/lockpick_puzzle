@@ -87,6 +87,10 @@ function Round:currentPhase()
     return self.phaseMachine.currentState
 end
 
+function Round:isReady()
+    return self:currentPhase() == RoundState.READY
+end
+
 function Round:isAnimating()
     return self.phaseMachine:isTimed()
 end

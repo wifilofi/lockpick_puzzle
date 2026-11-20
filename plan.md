@@ -47,14 +47,16 @@ Capture the current behavior before editing and replay the same cases after each
 | Retry | Results close, `GameFlow` goes back to `playing`, and a fresh round starts. |
 | Independent instances | Selecting cards or advancing one machine does not alter another machine or its input level data. |
 | Next Level | A storage-room win unlocks the workshop. Losses and the final level offer Retry only. |
+| Hint | During card selection, Hint gives the visible slot of a card on a winning path or reports that no winning moves remain. |
 
 ### Verification status
 
 - 2026-11-20. The current Lua modules passed baseline parity, win and loss sequences, FIFO queueing, restart across animation phases, slow-frame transitions, independent instances, and Retry. With stubbed SRI APIs, the entry point also passed HUD callbacks, keyboard restart, shock reset, and idle and results update checks.
 - SRI project validation and packaging passed. All 12 Lua files in the staged package matched the project source. The extracted puzzle rules also passed direct tests for wraparound in both directions, outcome precedence, and independent board snapshots.
 - The progression checks passed using the game entry point and stubbed SRI APIs. They cover Next Level visibility and gating, the workshop win and loss, rebuilding sockets, and Retry and Restart on the current level. The packaged Lua scripts and HUD document matched the source.
-- Pending live runtime check. Play both levels in the staged game, check restart during a turn and shock, and verify Retry and Next Level before replacing `build/`.
+- The solver matched round outcomes for 16 positions across both levels and two test boards. Stubbed SRI checks covered hint visibility, dead-end feedback, clearing hints on play or restart, and level progression. All 14 packaged Lua and RmlUi files matched the source.
+- Pending live runtime check. Play both levels in the staged game, check restart during a turn and shock, and verify Hint, Retry, and Next Level before replacing `build/`.
 
 After the runtime checks pass, refresh `build/lockpick_puzzle.exe` and its accompanying files. SRI requires the packaging output to be outside the project. Stage the build there, then copy the verified package into `build/`.
 
-Springs, linked sockets, undo, hints, level generation, and new scenes are follow-on work. A solver or generator can use [PuzzleRules.lua](content/Scripts/Lockpick/PuzzleRules.lua) to initialize occupancy, resolve a rotation to a socket, and simulate a strike without phase timers or rendering. A strike returns a fresh board, the remaining attempts, and any win or loss outcome. Round still controls when the outcome appears in the game.
+Springs, linked sockets, undo, level generation, and new scenes are follow-on work. [PuzzleSolver.lua](content/Scripts/Lockpick/PuzzleSolver.lua) powers Hint by checking the remaining card order with the same puzzle rules used by Round. A solver or generator can use [PuzzleRules.lua](content/Scripts/Lockpick/PuzzleRules.lua) to initialize occupancy, resolve a rotation to a socket, and simulate a strike without phase timers or rendering. A strike returns a fresh board, the remaining attempts, and any win or loss outcome. Round still controls when the outcome appears in the game.

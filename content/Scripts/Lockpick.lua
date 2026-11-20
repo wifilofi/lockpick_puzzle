@@ -1,6 +1,7 @@
 local GameFlow = require("Scripts.Lockpick.GameFlow")
 local LockView = require("Scripts.Lockpick.LockView")
 local Hud = require("Scripts.Lockpick.Hud")
+local PuzzleSolver = require("Scripts.Lockpick.PuzzleSolver")
 
 local LEVEL = "storage"
 
@@ -32,11 +33,17 @@ local function advance()
     if flow:advance() then refreshRound() end
 end
 
+local function requestHint()
+    if not round:isReady() then return end
+    local slot = PuzzleSolver.findWinningCard(round.occupied, round.target, round.attempts, round.hand)
+    hud:showHint(slot)
+end
+
 function OnStart()
     flow = GameFlow.new(LEVEL, Log.info)
     round = flow.round
     view = LockView.new()
-    hud = Hud.new(selectCard, restart, retry, advance)
+    hud = Hud.new(selectCard, restart, retry, advance, requestHint)
     refreshRound()
     hud:show()
 end
