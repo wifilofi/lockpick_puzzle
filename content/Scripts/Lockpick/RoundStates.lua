@@ -17,8 +17,8 @@ local definitions = {
     [Id.STRIKE] = State.timed(0.13, function(round) round:impact() end),
     [Id.RECOIL] = State.timed(0.13, function(round) round:afterRecoil() end),
     [Id.SHOCK] = State.timed(0.42, function(round) round.phaseMachine:transitionTo(Id.DROP) end),
-    [Id.DROP] = State.timed(0.35, function(round) round:finish(false) end),
-    [Id.OPEN] = State.timed(0.70, function(round) round:finish(true) end),
+    [Id.DROP] = State.timed(0.35, function(round) round:finish() end),
+    [Id.OPEN] = State.timed(0.70, function(round) round:finish() end),
     [Id.FINISHED] = State.untimed(),
 }
 

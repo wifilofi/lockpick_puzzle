@@ -1,3 +1,4 @@
+local PuzzleRules = require("Scripts.Lockpick.PuzzleRules")
 local StateMachine = require("Scripts.Lockpick.StateMachine")
 local RoundStates = require("Scripts.Lockpick.RoundStates")
 
@@ -16,15 +17,12 @@ end
 function Round:restart(level)
     self.name = level.name
     self.socketCount = #level.sectors
-    self.occupied = {}
-    for i = 1, self.socketCount do
-        self.occupied[i] = level.sectors:sub(i, i) == "k"
-    end
+    self.occupied = PuzzleRules.initialOccupancy(level.sectors)
     self.hand = { table.unpack(level.moves) }
     self.queue, self.queueHead = {}, 1
     self.attempts, self.target = #self.hand + 1, 1
     self.angleFrom, self.angleTo = 0, 0
-    self.result, self.status = nil, "openingStrike"
+    self.result, self.pendingResult, self.status = nil, nil, "openingStrike"
     self.phaseMachine:transitionTo(RoundState.STRIKE)
 end
 
@@ -41,7 +39,7 @@ function Round:startQueuedTurn()
     end
     local turns = self.queue[self.queueHead]
     self.queueHead = self.queueHead + 1
-    self.target = (self.target - 1 + turns) % self.socketCount + 1
+    self.target = PuzzleRules.targetAfterTurn(self.target, turns, self.socketCount)
     self.angleFrom, self.angleTo = self.angleTo, self.angleTo + turns
     self.status = "turning"
     self.phaseMachine:transitionTo(RoundState.TURN)
@@ -59,25 +57,24 @@ function Round:selectCard(slot)
 end
 
 function Round:impact()
-    self.attempts = self.attempts - 1
-    if self.occupied[self.target] then
+    self.occupied, self.attempts, self.pendingResult =
+        PuzzleRules.strike(self.occupied, self.target, self.attempts)
+    if self.pendingResult == "lost" then
         self:clearCards()
         self.status = "occupied"
         self.phaseMachine:transitionTo(RoundState.SHOCK)
     else
-        self.occupied[self.target] = true
         self.phaseMachine:transitionTo(RoundState.RECOIL)
     end
 end
 
-function Round:finish(won)
-    self.result = won and "won" or "lost"
-    self.status = nil
+function Round:finish()
+    self.result, self.pendingResult, self.status = self.pendingResult, nil, nil
     self.phaseMachine:transitionTo(RoundState.FINISHED)
 end
 
 function Round:afterRecoil()
-    if self.attempts == 0 then
+    if self.pendingResult == "won" then
         self:clearCards()
         self.status = "openingDoor"
         self.phaseMachine:transitionTo(RoundState.OPEN)

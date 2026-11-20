@@ -50,9 +50,9 @@ Capture the current behavior before editing and replay the same cases after each
 ### Verification status
 
 - 2026-11-20. The current Lua modules passed baseline parity, win and loss sequences, FIFO queueing, restart across animation phases, slow-frame transitions, independent instances, and Retry. With stubbed SRI APIs, the entry point also passed HUD callbacks, keyboard restart, shock reset, and idle and results update checks.
-- SRI project validation and packaging passed. All 11 Lua files in the staged package matched the project source.
+- SRI project validation and packaging passed. All 12 Lua files in the staged package matched the project source. The extracted puzzle rules also passed direct tests for wraparound in both directions, outcome precedence, and independent board snapshots.
 - Pending live runtime check. Play the win and loss sequences in the staged game, check restart during a turn and shock, and verify Retry before replacing `build/`.
 
 After the runtime checks pass, refresh `build/lockpick_puzzle.exe` and its accompanying files. SRI requires the packaging output to be outside the project. Stage the build there, then copy the verified package into `build/`.
 
-Springs, linked sockets, undo, hints, level generation, and new scenes are follow-on work. When a solver or generator needs the puzzle rules, extract a pure transition function that can run without phase timers or rendering.
+Springs, linked sockets, undo, hints, level generation, and new scenes are follow-on work. A solver or generator can use [PuzzleRules.lua](content/Scripts/Lockpick/PuzzleRules.lua) to initialize occupancy, resolve a rotation to a socket, and simulate a strike without phase timers or rendering. A strike returns a fresh board, the remaining attempts, and any win or loss outcome. Round still controls when the outcome appears in the game.
