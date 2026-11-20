@@ -5,7 +5,7 @@ Hud.__index = Hud
 
 local HUD_STATUS = {
     openingStrike = "Setting the opening pin…",
-    choose = "Choose a rotation card. + turns clockwise.",
+    choose = "Choose a rotation card. + turns clockwise, - turns counterclockwise.",
     turning = "Turning the lock…",
     occupied = "Socket occupied",
     openingDoor = "Opening the door…",
@@ -23,6 +23,7 @@ function Hud.new(actions)
         title = assert(document:GetElement("level")),
         attemptsLabel = assert(document:GetElement("attempts")),
         linkHelp = assert(document:GetElement("link-help")),
+        springHelp = assert(document:GetElement("spring-help")),
         message = assert(document:GetElement("message")),
         hintButton = assert(document:GetElement("hint")),
         undoButton = assert(document:GetElement("undo")),
@@ -80,6 +81,11 @@ function Hud:update(round, canAdvance)
     if self.displayedLinkHelp ~= hasLinks then
         self.displayedLinkHelp = hasLinks
         assert(self.linkHelp:SetClass("hidden", not hasLinks))
+    end
+    local hasSprings = #round.springs > 0
+    if self.displayedSpringHelp ~= hasSprings then
+        self.displayedSpringHelp = hasSprings
+        assert(self.springHelp:SetClass("hidden", not hasSprings))
     end
     if self.displayedAttempts ~= round.attempts then
         self.displayedAttempts = round.attempts

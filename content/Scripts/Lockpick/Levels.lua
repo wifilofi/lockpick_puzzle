@@ -3,7 +3,8 @@ local PuzzleGenerator = require("Scripts.Lockpick.PuzzleGenerator")
 local levelData = {
     storage = { name = "Подсобка", sectors = "...k....", moves = { 1, 2, 2 }, nextId = "workshop" },
     workshop = { name = "Мастерская", sectors = "...k...k..", moves = { 1, 2, 3 }, nextId = "relay" },
-    relay = { name = "Реле", sectors = "..k.k.....", moves = { 1, 2, 3 }, links = { { 2, 4 } }, nextId = "challenge" },
+    relay = { name = "Реле", sectors = "..k.k.....", moves = { 1, 2, 3 }, links = { { 2, 4 } }, nextId = "springs" },
+    springs = { name = "Пружины", sectors = "...k...k.k", moves = { 2, 3, -3 }, springs = { 3 }, nextId = "challenge" },
     challenge = { name = "Испытание", generate = PuzzleGenerator.generate },
 }
 
@@ -14,7 +15,13 @@ local function loadLevel(id)
     for index, pair in ipairs(puzzle.links or {}) do
         links[index] = { pair[1], pair[2] }
     end
-    return { name = level.name, sectors = puzzle.sectors, moves = { table.unpack(puzzle.moves) }, links = links }
+    return {
+        name = level.name,
+        sectors = puzzle.sectors,
+        moves = { table.unpack(puzzle.moves) },
+        links = links,
+        springs = { table.unpack(puzzle.springs or {}) },
+    }
 end
 
 local function nextLevelId(id)

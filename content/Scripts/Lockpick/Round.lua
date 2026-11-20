@@ -19,6 +19,8 @@ function Round:restart(level)
     self.socketCount = #level.sectors
     self.linkPairs = level.links or {}
     self.linkPartners = PuzzleRules.linkPartners(self.linkPairs, self.socketCount)
+    self.springs = level.springs or {}
+    PuzzleRules.validateSprings(self.springs, self.socketCount)
     self.occupied = PuzzleRules.initialOccupancy(level.sectors)
     self.hand = { table.unpack(level.moves) }
     self.history = {}
@@ -57,6 +59,7 @@ function Round:startQueuedTurn()
         return
     end
     self:recordBeforeTurn()
+    self.occupied = PuzzleRules.releaseSprings(self.occupied, self.springs)
     local turns = self.queue[self.queueHead].turns
     self.queueHead = self.queueHead + 1
     self.target = PuzzleRules.targetAfterTurn(self.target, turns, self.socketCount)

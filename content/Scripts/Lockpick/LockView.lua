@@ -45,7 +45,7 @@ local function setLightIntensity(light, intensity)
 end
 
 function LockView.new()
-    local self = setmetatable({ sockets = {}, linkMarkers = {} }, LockView)
+    local self = setmetatable({ sockets = {}, socketMarkers = {} }, LockView)
     self.hinge = Scene.Spawn("Door hinge", { position = v(DOOR_X, 0, DOOR_Z) })
     part("Door", CUBE, GALVANIZED_STEEL, v(2.3, 0.1, 0), v(4.6, 4.95, 0.30), self.hinge)
     part("Door trim", CUBE, STEEL, v(2.3, 2.42, 0.03), v(4.63, 0.09, 0.31), self.hinge)
@@ -70,6 +70,7 @@ function LockView:buildSockets(count)
         Scene.Destroy(socket.bulb)
     end
     self.sockets = {}
+    self.displayedOccupancy = nil
     for i = 1, count do
         local radians = (i - 1) * 2 * math.pi / count
         local x = SOCKET_RADIUS * math.sin(radians)
@@ -82,25 +83,33 @@ function LockView:buildSockets(count)
     end
 end
 
-function LockView:showLinks(pairs, count)
-    if self.linkPairs == pairs and self.linkSocketCount == count then return end
-    for _, marker in ipairs(self.linkMarkers) do Scene.Destroy(marker) end
-    self.linkMarkers = {}
-    self.linkPairs, self.linkSocketCount = pairs, count
+function LockView:showSocketMarkers(linkPairs, springs, count)
+    if self.linkPairs == linkPairs and self.springs == springs and self.markerSocketCount == count then return end
+    for _, marker in ipairs(self.socketMarkers) do Scene.Destroy(marker) end
+    self.socketMarkers = {}
+    self.linkPairs, self.springs, self.markerSocketCount = linkPairs, springs, count
 
     -- Give the two sockets in each pair the same number of dots.
-    for group, pair in ipairs(pairs) do
+    for group, pair in ipairs(linkPairs) do
         for _, socket in ipairs(pair) do
             local radians = (socket - 1) * 2 * math.pi / count
             local sine, cosine = math.sin(radians), math.cos(radians)
             for dot = 1, group do
                 local offset = (dot - (group + 1) / 2) * 0.085
                 local position = v(0.75 * sine + offset * cosine, -0.75 * cosine + offset * sine, 0.172)
-                self.linkMarkers[#self.linkMarkers + 1] = part(
+                self.socketMarkers[#self.socketMarkers + 1] = part(
                     ("Link %d socket %d dot %d"):format(group, socket, dot),
                     CYLINDER, DARK, position, v(0.036, 0.036, 0.025), self.rotor)
             end
         end
+    end
+    for _, socket in ipairs(springs) do
+        local radians = (socket - 1) * 2 * math.pi / count
+        local marker = part("Spring socket " .. socket, CUBE, DARK,
+            v(0.61 * math.sin(radians), -0.61 * math.cos(radians), 0.172),
+            v(0.20, 0.045, 0.025), self.rotor)
+        marker:SetEulerAngles(v(0, 0, math.deg(radians)))
+        self.socketMarkers[#self.socketMarkers + 1] = marker
     end
 end
 
@@ -111,6 +120,12 @@ function LockView:setPin(index, live)
     local p = socket.pin:GetPosition()
     socket.pin:SetPosition(v(p.x, p.y, live and 0.211 or 0.125))
     setLightIntensity(socket.bulb, live and BULB_INTENSITY or 0)
+end
+
+function LockView:syncPins(occupied)
+    if self.displayedOccupancy == occupied then return end
+    for index, live in ipairs(occupied) do self:setPin(index, live) end
+    self.displayedOccupancy = occupied
 end
 
 function LockView:setAngle(steps)
@@ -138,8 +153,8 @@ end
 function LockView:restart(round)
     self:setShock(nil)
     self:buildSockets(round.socketCount)
-    self:showLinks(round.linkPairs, round.socketCount)
-    for index, live in ipairs(round.occupied) do self:setPin(index, live) end
+    self:showSocketMarkers(round.linkPairs, round.springs, round.socketCount)
+    self:syncPins(round.occupied)
     self.hinge:SetEulerAngles(v(0, 0, 0))
     self:setAngle(round.angleTo)
     self:setPick(0, PICK_REST, PICK_Z, 0)
@@ -147,16 +162,12 @@ end
 
 function LockView:update(round, phase, progress, elapsed)
     if not phase then return end
+    self:syncPins(round.occupied)
     if phase == RoundState.TURN then
         self:setAngle(round.angleFrom + (round.angleTo - round.angleFrom) * (1 - (1 - progress)^3))
     elseif phase == RoundState.STRIKE then
         self:setPick(0, PICK_REST + (PICK_CONTACT - PICK_REST) * progress, PICK_Z, 0)
-        if progress == 1 then
-            self:setPin(round.target, round.occupied[round.target])
-            local partner = round.linkPartners[round.target]
-            if partner then self:setPin(partner, round.occupied[partner]) end
-            if round:currentPhase() == RoundState.SHOCK then self:setShock(round.target) end
-        end
+        if progress == 1 and round:currentPhase() == RoundState.SHOCK then self:setShock(round.target) end
     elseif phase == RoundState.RECOIL then
         self:setPick(0, PICK_CONTACT + (PICK_REST - PICK_CONTACT) * progress, PICK_Z, 0)
     elseif phase == RoundState.SHOCK then
