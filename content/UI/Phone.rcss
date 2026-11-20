@@ -1,6 +1,7 @@
 #phone {
     /* The two original photographs share a hinge. The base extends below the stage. */
     position: absolute;
+    z-index: 2;
     right: -0.55vw;
     bottom: -53.18vh;
     width: 52.34vh;
