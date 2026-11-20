@@ -1,0 +1,35 @@
+#pick-hand-pivot, #falling-pick-pivot {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 0;
+    height: 0;
+    transform-origin: 0 0;
+    pointer-events: none;
+}
+/* Match the 1440x1080 Unity art scale and position each image from its tip. */
+#pick-hand-art {
+    position: absolute;
+    left: -19.676vh;
+    top: -3.426vh;
+    width: 28.426vh;
+    height: 77.222vh;
+    decorator: image("Hand/SPR_Hand_Screw.png");
+    pointer-events: none;
+}
+#pick-hand-art.zapped {
+    image-color: #9edbff;
+}
+#pick-hand-art.burned {
+    decorator: image("Hand/SPR_Hand_Screw_Burned.png");
+    image-color: #ffcab3;
+}
+#falling-pick-art {
+    position: absolute;
+    left: -5.787vh;
+    top: -0.556vh;
+    width: 11.852vh;
+    height: 47.407vh;
+    decorator: image("Hand/SPR_Screwdriver_Burned.png");
+    pointer-events: none;
+}

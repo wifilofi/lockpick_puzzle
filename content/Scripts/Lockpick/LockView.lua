@@ -6,8 +6,6 @@ LockView.__index = LockView
 local FLASH_TIME, FLASH_INTENSITY = 0.22, 5.5
 local BULB_INTENSITY = 1.7
 local LOCK_Y, SOCKET_RADIUS, PICK_Z = 0.44, 0.97, 0.27
-local PICK_CONTACT = LOCK_Y - SOCKET_RADIUS - 0.36
-local PICK_REST = PICK_CONTACT - 0.52
 local DOOR_X, DOOR_Z = -2.3, -0.55
 local CUBE = "engine/primitives/cube/model.obj"
 local CYLINDER = "game/Meshes/Cylinder.obj"
@@ -55,9 +53,6 @@ function LockView.new()
     part("Keyway", CUBE, DARK, v(0, 0, 0.145), v(0.16, 0.43, 0.045), self.rotor)
 
     self.marker = part("Contact marker", CUBE, RUSTED_STEEL, v(0, LOCK_Y - 1.28, PICK_Z), v(0.39, 0.082, 0.10))
-    self.pick = Scene.Spawn("Pick")
-    part("Pick shaft", CUBE, STEEL, v(0, 0.13, 0), v(0.065, 0.46, 0.065), self.pick)
-    part("Pick grip", CUBE, RUSTED_STEEL, v(0, -0.19, 0), v(0.145, 0.28, 0.13), self.pick)
     self.shockFlash = pointLight("Shock flash", v(0, LOCK_Y - SOCKET_RADIUS, 0.95), v(1, 0.78, 0.50), 3.9)
     return self
 end
@@ -132,9 +127,8 @@ function LockView:setAngle(steps)
     self.rotor:SetEulerAngles(v(0, 0, -steps * 360 / #self.sockets))
 end
 
-function LockView:setPick(x, y, z, roll)
-    self.pick:SetPosition(v(x, y, z))
-    self.pick:SetEulerAngles(v(0, 0, roll))
+function LockView:pickContact()
+    return v(0, LOCK_Y - SOCKET_RADIUS, PICK_Z)
 end
 
 function LockView:setShock(index)
@@ -157,7 +151,6 @@ function LockView:restart(round)
     self:syncPins(round.occupied)
     self.hinge:SetEulerAngles(v(0, 0, 0))
     self:setAngle(round.angleTo)
-    self:setPick(0, PICK_REST, PICK_Z, 0)
 end
 
 function LockView:update(round, phase, progress, elapsed)
@@ -166,18 +159,11 @@ function LockView:update(round, phase, progress, elapsed)
     if phase == RoundState.TURN then
         self:setAngle(round.angleFrom + (round.angleTo - round.angleFrom) * (1 - (1 - progress)^3))
     elseif phase == RoundState.STRIKE then
-        self:setPick(0, PICK_REST + (PICK_CONTACT - PICK_REST) * progress, PICK_Z, 0)
         if progress == 1 and round:currentPhase() == RoundState.SHOCK then self:setShock(round.target) end
-    elseif phase == RoundState.RECOIL then
-        self:setPick(0, PICK_CONTACT + (PICK_REST - PICK_CONTACT) * progress, PICK_Z, 0)
     elseif phase == RoundState.SHOCK then
         local flash = math.max(0, 1 - elapsed / FLASH_TIME)
         setLightIntensity(self.shockFlash, FLASH_INTENSITY * flash ^ 2)
-        local shake = math.sin(progress * math.pi * 12) * 0.045
-        self:setPick(shake, PICK_CONTACT, PICK_Z, shake * 140)
         if progress == 1 then self:setShock(nil) end
-    elseif phase == RoundState.DROP then
-        self:setPick(0.54 * progress, PICK_CONTACT - 2.8 * progress * progress, PICK_Z, -115 * progress)
     elseif phase == RoundState.OPEN then
         self.hinge:SetEulerAngles(v(0, 72 * (1 - (1 - progress)^3), 0))
     end
