@@ -23,6 +23,8 @@ function Round:restart(level)
     PuzzleRules.validateSprings(self.springs, self.socketCount)
     self.occupied = PuzzleRules.initialOccupancy(level.sectors)
     self.hand = { table.unpack(level.moves) }
+    self.cardCount, self.handSlots = #self.hand, {}
+    for slot = 1, self.cardCount do self.handSlots[slot] = slot end
     self.history = {}
     self.queue, self.queueHead = {}, 1
     self.attempts, self.target = #self.hand + 1, 1
@@ -32,18 +34,21 @@ function Round:restart(level)
 end
 
 function Round:clearCards()
-    self.hand, self.queue, self.queueHead = {}, {}, 1
+    self.hand, self.handSlots, self.queue, self.queueHead = {}, {}, {}, 1
 end
 
 function Round:recordBeforeTurn()
     local hand = { table.unpack(self.hand) }
+    local handSlots = { table.unpack(self.handSlots) }
     -- Reverse the pending selections to recover the hand before this turn.
     for index = #self.queue, self.queueHead, -1 do
         local card = self.queue[index]
         table.insert(hand, card.slot, card.turns)
+        table.insert(handSlots, card.slot, card.key)
     end
     self.history[#self.history + 1] = {
         hand = hand,
+        handSlots = handSlots,
         occupied = self.occupied, -- Each strike replaces the board with a fresh snapshot.
         attempts = self.attempts,
         target = self.target,
@@ -74,9 +79,20 @@ function Round:selectCard(slot)
         return
     end
     if not self.hand[slot] then return end
-    self.queue[#self.queue + 1] = { slot = slot, turns = table.remove(self.hand, slot) }
+    self.queue[#self.queue + 1] = {
+        slot = slot,
+        turns = table.remove(self.hand, slot),
+        key = table.remove(self.handSlots, slot),
+    }
     if phase == RoundState.READY then self:startQueuedTurn() end
     return true
+end
+
+function Round:selectKey(key)
+    for slot, handKey in ipairs(self.handSlots) do
+        if handKey == key then return self:selectCard(slot) end
+    end
+    return nil
 end
 
 function Round:canUndo()
@@ -86,7 +102,8 @@ end
 function Round:undo()
     if not self:canUndo() then return false end
     local previous = table.remove(self.history)
-    self.hand, self.occupied = previous.hand, previous.occupied
+    self.hand, self.handSlots = previous.hand, previous.handSlots
+    self.occupied = previous.occupied
     self.attempts, self.target = previous.attempts, previous.target
     self.angleFrom, self.angleTo = previous.angle, previous.angle
     self.queue, self.queueHead = {}, 1

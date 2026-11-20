@@ -1,4 +1,4 @@
-local CARD_SLOTS = 3
+local CardPanel = require("Scripts.Lockpick.CardPanel")
 
 local Hud = {}
 Hud.__index = Hud
@@ -30,18 +30,11 @@ function Hud.new(actions)
         result = assert(document:GetElement("result")),
         resultText = assert(document:GetElement("outcome")),
         nextLevelButton = assert(document:GetElement("next-level")),
-        cardButtons = {},
-        visibleCards = {},
         controls = assert(Input.GetContext("Lockpick")),
         actions = actions,
     }, Hud)
 
-    for slot = 1, CARD_SLOTS do
-        local id = "card" .. slot
-        self.cardButtons[slot] = assert(document:GetElement(id))
-        assert(document:On(id, "click", function() actions.selectCard(slot) end))
-        self.controls:BindAction(id, PhysicalKey["Num" .. slot])
-    end
+    self.cardPanel = CardPanel.new(document, self.controls, actions.selectCard)
     assert(document:On("restart", "click", actions.restart))
     assert(document:On("replay", "click", actions.retry))
     assert(document:On("next-level", "click", actions.advance))
@@ -60,14 +53,13 @@ function Hud:pollInput()
         self.actions.restart()
         return true
     end
-    for slot = 1, CARD_SLOTS do
-        if self.controls:Pressed("card" .. slot) then self.actions.selectCard(slot) end
-    end
+    self.cardPanel:pollInput()
     return false
 end
 
 function Hud:showHint(slot)
-    local text = slot and ("Try card [%d]."):format(slot) or "No winning moves left. Restart to try again."
+    self.cardPanel:setHint(slot)
+    local text = slot and "Try the highlighted key." or "No winning moves left. Use Undo or Restart."
     assert(self.message:SetText(text))
     self.displayedStatus = nil
 end
@@ -115,17 +107,7 @@ function Hud:update(round, canAdvance)
         self.displayedNextLevel = canAdvance
         assert(self.nextLevelButton:SetClass("hidden", not canAdvance))
     end
-    for slot, button in ipairs(self.cardButtons) do
-        local turns = round.hand[slot]
-        local visible = turns or false
-        if self.visibleCards[slot] ~= visible then
-            self.visibleCards[slot] = visible
-            assert(button:SetClass("hidden", not turns))
-            if turns then
-                assert(button:SetText(("[%d] %s%d"):format(slot, turns > 0 and "+" or "", turns)))
-            end
-        end
-    end
+    self.cardPanel:update(round.hand, round.handSlots, round.cardCount)
 end
 
 return Hud

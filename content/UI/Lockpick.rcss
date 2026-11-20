@@ -36,25 +36,74 @@ button:hover {
 #controls {
     position: absolute;
     bottom: 14dp;
-    left: 0;
-    width: 100%;
+    left: 35%;
+    width: 30%;
     text-align: center;
 }
 #message {
     font-size: 15dp;
 }
+#card-panel {
+    position: absolute;
+    left: 0.3vw;
+    bottom: 0;
+    width: 46.3vh;
+    height: 46.3vh;
+    max-width: 34vw;
+    max-height: 34vw;
+    decorator: image("Cards/SPR_Keypad.png");
+}
 .card {
-    width: 54dp;
-    padding: 10dp;
+    position: absolute;
+    width: 25.98%;
+    height: 25.98%;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-radius: 0;
+    background-color: transparent;
+    decorator: image("Cards/SPR_Key.png");
+}
+.card.column-1 { left: 7.32%; }
+.card.column-2 { left: 37.01%; }
+.card.column-3 { left: 66.70%; }
+.card.row-1 { top: 7.32%; }
+.card.row-2 { top: 37.01%; }
+.card.row-3 { top: 66.70%; }
+.card:hover, .card:focus-visible {
+    background-color: transparent;
+    decorator: image("Cards/SPR_Key_Highlighted.png");
+}
+.card:active {
+    transform: scale(0.96);
+}
+.card.hinted {
+    decorator: image("Cards/SPR_Key_Tip_Normal.png");
+}
+.card.hinted:hover, .card.hinted:focus-visible {
+    decorator: image("Cards/SPR_Key_Tip.png");
+}
+.card.off {
+    pointer-events: none;
+    focus: none;
+    decorator: image("Cards/SPR_Key_Off.png");
+}
+.card-value {
+    position: absolute;
+    top: 26%;
+    left: 0;
+    right: 0;
+    color: #f0f8ff;
+    font-size: 3.6vh;
+    font-weight: bold;
     text-align: center;
-    border-color: #bc945c;
-    font-size: 19dp;
+    pointer-events: none;
 }
 #result {
     position: absolute;
     bottom: 16dp;
-    left: 0;
-    width: 100%;
+    left: 35%;
+    width: 30%;
     background-color: #20242a;
     text-align: center;
     padding: 12dp 0;
