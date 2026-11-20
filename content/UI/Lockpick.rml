@@ -8,6 +8,7 @@
     <div id="header">
         <h1 id="level"></h1>
         <p id="attempts"></p>
+        <p id="link-help" class="hidden">Matching dots link two sockets. A strike sets both pins.</p>
     </div>
     <div id="round-actions">
         <button id="undo" class="hidden">Undo</button>

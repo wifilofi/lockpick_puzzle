@@ -22,6 +22,7 @@ function Hud.new(actions)
         document = document,
         title = assert(document:GetElement("level")),
         attemptsLabel = assert(document:GetElement("attempts")),
+        linkHelp = assert(document:GetElement("link-help")),
         message = assert(document:GetElement("message")),
         hintButton = assert(document:GetElement("hint")),
         undoButton = assert(document:GetElement("undo")),
@@ -74,6 +75,11 @@ function Hud:update(round, canAdvance)
     if self.displayedName ~= round.name then
         self.displayedName = round.name
         assert(self.title:SetText(round.name))
+    end
+    local hasLinks = #round.linkPairs > 0
+    if self.displayedLinkHelp ~= hasLinks then
+        self.displayedLinkHelp = hasLinks
+        assert(self.linkHelp:SetClass("hidden", not hasLinks))
     end
     if self.displayedAttempts ~= round.attempts then
         self.displayedAttempts = round.attempts
