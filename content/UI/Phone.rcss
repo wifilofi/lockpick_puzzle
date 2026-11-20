@@ -90,12 +90,11 @@
 }
 .phone-icon.unavailable {
     focus: none;
+    border-color: transparent;
 }
 .phone-icon.unavailable .phone-glyph {
     image-color: #646464;
-}
-.phone-icon.unavailable:hover {
-    border-color: #646464;
+    transform: translate(-50%, -50%);
 }
 #next-level.unavailable {
     display: none;
