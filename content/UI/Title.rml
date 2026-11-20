@@ -1,0 +1,23 @@
+<rml>
+<head>
+    <title>Lockpick Puzzle</title>
+    <link type="text/rcss" href="engine/ui/base.rcss" />
+    <link type="text/rcss" href="Title.rcss" />
+</head>
+<body>
+    <div id="title-backdrop"></div>
+    <div id="title-panel">
+        <h1>Lockpick Puzzle</h1>
+        <div id="title-menu">
+            <button id="title-play" class="title-action">Play</button>
+            <button id="title-choose-level" class="title-action">Level Select</button>
+        </div>
+        <div id="title-level-select" class="hidden">
+            <h2>Choose a level</h2>
+            <div id="title-level-list"></div>
+            <button id="title-back" class="title-action">Back</button>
+        </div>
+        <p id="title-error"></p>
+    </div>
+</body>
+</rml>
