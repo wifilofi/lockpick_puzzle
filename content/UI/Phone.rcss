@@ -1,10 +1,10 @@
 #phone {
     /* The two original photographs share a hinge. The base extends below the stage. */
     position: absolute;
-    right: 0.55vw;
-    bottom: -38.64vh;
-    width: 45.51vh;
-    height: 96.95vh;
+    right: -0.55vw;
+    bottom: -53.18vh;
+    width: 52.34vh;
+    height: 111.49vh;
     pointer-events: none;
 }
 #phone-base, #phone-lid {
@@ -28,7 +28,7 @@
     top: 8.6%;
     width: 40.69%;
     height: 23.16%;
-    border-radius: 0.69vh;
+    border-radius: 0.79vh;
     overflow: hidden;
     background-color: #101010;
     decorator: image("Phone/phone_bg.png");
@@ -57,11 +57,11 @@
 }
 #phone-label {
     top: 3.5%;
-    font-size: 1.74vh;
+    font-size: 2.00vh;
 }
 #phone-select {
     top: 90%;
-    font-size: 1.28vh;
+    font-size: 1.47vh;
 }
 .phone-icon {
     position: absolute;
@@ -71,7 +71,7 @@
     padding: 0;
     box-sizing: border-box;
     border: 1.5dp transparent;
-    border-radius: 0.56vh;
+    border-radius: 0.64vh;
     background-color: transparent;
     pointer-events: auto;
 }
