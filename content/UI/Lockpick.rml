@@ -29,22 +29,21 @@
     <div id="controls">
         <p id="message"></p>
     </div>
-    <div id="result" class="hidden">
-        <h1 id="outcome"></h1>
-    </div>
-    <div id="loss-dim"></div>
+    <div id="result-dim"></div>
     <div id="phone">
         <div id="phone-base"></div>
         <div id="phone-lid"></div>
         <div id="phone-screen">
+            <div id="phone-result-message"><div id="phone-result-icon"></div></div>
             <p id="phone-label"></p>
-            <button id="undo" class="phone-icon phone-col-1 phone-row-1 unavailable"><span class="phone-glyph"></span></button>
+            <button id="undo" class="phone-icon phone-col-1 phone-row-1 unavailable"><span class="phone-glyph"></span><span class="phone-result-action">Undo</span></button>
             <button id="hint" class="phone-icon phone-col-2 phone-row-1 unavailable"><span class="phone-glyph"></span></button>
-            <button id="restart" class="phone-icon phone-col-3 phone-row-1"><span class="phone-glyph"></span></button>
-            <button id="phone-home" class="phone-icon phone-col-1 phone-row-2 unavailable"><span class="phone-glyph"></span></button>
-            <button id="next-level" class="phone-icon phone-col-2 phone-row-2 unavailable"><span class="phone-glyph"></span></button>
+            <button id="restart" class="phone-icon phone-col-3 phone-row-1"><span class="phone-glyph"></span><span class="phone-result-action">Restart</span></button>
+            <button id="phone-home" class="phone-icon phone-col-1 phone-row-2 unavailable"><span class="phone-glyph"></span><span class="phone-result-action">Menu</span></button>
+            <button id="next-level" class="phone-icon phone-col-2 phone-row-2 unavailable"><span class="phone-glyph"></span><span class="phone-result-action">Next</span></button>
             <p id="phone-select">Select</p>
             <div id="phone-glass"></div>
+            <div id="phone-result-flash"></div>
         </div>
     </div>
 </body>
