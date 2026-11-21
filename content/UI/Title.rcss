@@ -25,7 +25,16 @@ body {
     height: 266.25vh;
     margin-left: -62.5vh;
     transform-origin: 50% 20%;
-    animation: 0.48s cubic-out title-phone-zoom;
+    animation: 0.36s cubic-out title-phone-zoom;
+}
+
+@keyframes title-phone-depart {
+    from { transform: scale(1); }
+    to { transform: scale(1.12); }
+}
+#phone.title-phone.departing {
+    transform: scale(1.12);
+    animation: 0.16s cubic-in title-phone-depart;
 }
 
 #title-menu, #title-level-select {

@@ -5,6 +5,7 @@
     <link type="text/rcss" href="Lockpick.rcss" />
     <link type="text/rcss" href="Phone.rcss" />
     <link type="text/rcss" href="Hand.rcss" />
+    <link type="text/rcss" href="ScreenTransition.rcss" />
 </head>
 <body>
     <div id="pick-hand-pivot" class="hidden"><div id="pick-hand-art"></div></div>
@@ -46,5 +47,6 @@
             <div id="phone-result-flash"></div>
         </div>
     </div>
+    <div id="screen-fade"></div>
 </body>
 </rml>
