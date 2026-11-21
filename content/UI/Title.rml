@@ -11,6 +11,7 @@
         <div id="title-menu">
             <button id="title-play" class="title-action">Play</button>
             <button id="title-choose-level" class="title-action">Level Select</button>
+            <button id="title-exit" class="title-action">Exit</button>
         </div>
         <div id="title-level-select" class="hidden">
             <h2>Choose a level</h2>
