@@ -5,8 +5,11 @@
     bottom: -53.18vh;
     width: 52.34vh;
     height: 111.49vh;
-    transform-origin: 0 0;
     pointer-events: none;
+}
+#phone-zoom {
+    position: absolute;
+    top: 0;
 }
 #phone, #phone-front, #phone-play, #phone-menu {
     position: absolute;
@@ -47,13 +50,15 @@
     width: 40.69%;
     height: 51.43%;
     border-radius: 0.79vh;
-    overflow: hidden;
     background-color: #101010;
     decorator: image("Phone/phone_bg.png");
     color: white;
     font-family: Sony Sketch EF;
     font-weight: bold;
     text-align: center;
+}
+#phone-play, #phone-menu {
+    z-index: 1;
 }
 #phone-anchor.switching button {
     pointer-events: none;
@@ -172,6 +177,8 @@
     top: 0;
     width: 100%;
     height: 100%;
+    z-index: 2;
+    border-radius: 0.79vh;
     background-color: #ebf5ff;
     opacity: 0;
     pointer-events: none;

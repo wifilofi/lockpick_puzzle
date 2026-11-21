@@ -24,8 +24,13 @@ function PhoneMenu:setPose(from, to, progress)
     local xvh = mix(from.xvh, to.xvh, progress)
     local yvh = mix(from.yvh, to.yvh, progress)
     local scale = mix(from.scale, to.scale, progress)
-    assert(self.anchor:SetProperty("transform",
-        ("translate(%.4fvw, %.4fvh) translateX(%.4fvh) scale(%.5f)"):format(xvw, yvh, xvh, scale)))
+    -- Resize the layout so the font atlas uses the visible glyph size.
+    assert(self.anchor:SetProperty("right", ("%.4fvw"):format(-0.55 - xvw)))
+    assert(self.anchor:SetProperty("bottom", ("%.4fvh"):format(-53.18 - yvh)))
+    assert(self.zoom:SetProperty("left", ("%.4fvh"):format(xvh)))
+    assert(self.zoom:SetProperty("width", ("%.4fvh"):format(52.34 * scale)))
+    assert(self.zoom:SetProperty("height", ("%.4fvh"):format(111.49 * scale)))
+    assert(self.zoom:SetProperty("font-size", ("%.4fvh"):format(scale)))
 end
 
 function PhoneMenu:setHinge(progress)
@@ -43,6 +48,7 @@ function PhoneMenu.new(document, startLevel)
     local self = setmetatable({
         startLevel = startLevel,
         anchor = assert(document:GetElement("phone-anchor")),
+        zoom = assert(document:GetElement("phone-zoom")),
         hinge = assert(document:GetElement("phone-hinge")),
         front = assert(document:GetElement("phone-front")),
         back = assert(document:GetElement("phone-back")),
@@ -143,7 +149,6 @@ function PhoneMenu:update(dt)
     assert(self.menuScreen:SetClass("hidden", not inMenu))
     assert(self.playScreen:SetClass("hidden", inMenu))
     assert(self.backdrop:SetClass("hidden", not inMenu))
-    if not inMenu then assert(self.anchor:SetProperty("transform", "none")) end
 end
 
 return PhoneMenu
