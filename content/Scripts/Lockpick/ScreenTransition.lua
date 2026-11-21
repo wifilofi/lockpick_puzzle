@@ -16,7 +16,6 @@ function ScreenTransition:isActive()
     return self.phase ~= nil
 end
 
--- The action returns true when a scene change will supply its own reveal.
 function ScreenTransition:cover(action)
     if self:isActive() then return false end
     self.phase, self.elapsed, self.onCovered = "covering", 0, action
@@ -27,11 +26,9 @@ end
 function ScreenTransition:update(dt)
     if not self.phase then return end
     if self.phase == "covered" then
-        local action = self.onCovered
-        if action then
-            self.onCovered = nil
-            if not action() then self.phase, self.elapsed = "revealing", 0 end
-        end
+        self.onCovered()
+        self.onCovered = nil
+        self.phase, self.elapsed = "revealing", 0
         return
     end
 
@@ -45,7 +42,7 @@ function ScreenTransition:update(dt)
     if progress < 1 then return end
 
     if covering then
-        -- Render one fully black frame before requesting a scene change or reset.
+        -- Render one fully black frame before resetting the round.
         self.phase = "covered"
     else
         self.phase = nil

@@ -4,6 +4,7 @@
     <link type="text/rcss" href="engine/ui/base.rcss" />
     <link type="text/rcss" href="Lockpick.rcss" />
     <link type="text/rcss" href="Phone.rcss" />
+    <link type="text/rcss" href="Title.rcss" />
     <link type="text/rcss" href="Hand.rcss" />
     <link type="text/rcss" href="ScreenTransition.rcss" />
 </head>
@@ -16,7 +17,7 @@
         <p id="link-help" class="hidden">Matching dots link two sockets. A strike sets both pins.</p>
         <p id="spring-help" class="hidden">A bar marks a spring pin. It releases when the lock turns.</p>
     </div>
-    <div id="card-panel">
+    <div id="card-panel" class="below-screen">
         <button id="card1" class="card column-1 row-1 hidden"><span id="card-value1" class="card-value"></span></button>
         <button id="card2" class="card column-2 row-1 hidden"><span id="card-value2" class="card-value"></span></button>
         <button id="card3" class="card column-3 row-1 hidden"><span id="card-value3" class="card-value"></span></button>
@@ -31,20 +32,52 @@
         <p id="message"></p>
     </div>
     <div id="result-dim"></div>
-    <div id="phone">
-        <div id="phone-base"></div>
-        <div id="phone-lid"></div>
-        <div id="phone-screen">
-            <div id="phone-result-message"><div id="phone-result-icon"></div></div>
-            <p id="phone-label"></p>
-            <button id="undo" class="phone-icon phone-col-1 phone-row-1 unavailable"><span class="phone-glyph"></span><span class="phone-result-action">Undo</span></button>
-            <button id="hint" class="phone-icon phone-col-2 phone-row-1 unavailable"><span class="phone-glyph"></span></button>
-            <button id="restart" class="phone-icon phone-col-3 phone-row-1"><span class="phone-glyph"></span><span class="phone-result-action">Restart</span></button>
-            <button id="phone-home" class="phone-icon phone-col-1 phone-row-2 unavailable"><span class="phone-glyph"></span><span class="phone-result-action">Menu</span></button>
-            <button id="next-level" class="phone-icon phone-col-2 phone-row-2 unavailable"><span class="phone-glyph"></span><span class="phone-result-action">Next</span></button>
-            <p id="phone-select">Select</p>
-            <div id="phone-glass"></div>
-            <div id="phone-result-flash"></div>
+    <div id="title-backdrop"></div>
+    <div id="phone-anchor" class="switching">
+        <div id="phone">
+            <div id="phone-base"></div>
+            <div id="phone-hinge">
+                <div id="phone-back"></div>
+                <div id="phone-front" class="hidden">
+                    <div id="phone-lid"></div>
+                    <div id="phone-screen">
+                        <div id="phone-play" class="hidden">
+                            <div id="phone-result-message"><div id="phone-result-icon"></div></div>
+                            <p id="phone-label"></p>
+                            <button id="undo" class="phone-icon phone-col-1 phone-row-1 unavailable"><span class="phone-glyph"></span><span class="phone-result-action">Undo</span></button>
+                            <button id="hint" class="phone-icon phone-col-2 phone-row-1 unavailable"><span class="phone-glyph"></span></button>
+                            <button id="restart" class="phone-icon phone-col-3 phone-row-1"><span class="phone-glyph"></span><span class="phone-result-action">Restart</span></button>
+                            <button id="phone-home" class="phone-icon phone-col-1 phone-row-2 unavailable"><span class="phone-glyph"></span><span class="phone-result-action">Menu</span></button>
+                            <button id="next-level" class="phone-icon phone-col-2 phone-row-2 unavailable"><span class="phone-glyph"></span><span class="phone-result-action">Next</span></button>
+                            <p id="phone-select">Select</p>
+                        </div>
+                        <div id="phone-menu" class="hidden">
+                            <div id="title-menu">
+                                <h1>Lockpick Puzzle</h1>
+                                <button id="title-play" class="phone-icon phone-col-1">
+                                    <span class="phone-glyph"></span>
+                                    <span class="title-icon-label">Play</span>
+                                </button>
+                                <button id="title-choose-level" class="phone-icon phone-col-2">
+                                    <span class="phone-glyph"></span>
+                                    <span class="title-icon-label">Level Select</span>
+                                </button>
+                                <button id="title-exit" class="phone-icon phone-col-3">
+                                    <span class="phone-glyph title-exit-glyph">×</span>
+                                    <span class="title-icon-label">Exit</span>
+                                </button>
+                            </div>
+                            <div id="title-level-select" class="hidden">
+                                <h2>Choose a level</h2>
+                                <div id="title-level-list"></div>
+                                <button id="title-back" class="title-action">Back</button>
+                            </div>
+                        </div>
+                        <div id="phone-glass"></div>
+                        <div id="phone-result-flash"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div id="screen-fade"></div>

@@ -1,40 +1,14 @@
-body {
-    background-color: #0b1212;
-}
 #title-backdrop {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
+    z-index: 1;
+    background-color: #0b1212;
     decorator: image("Title/SPR_Door.png" cover);
-    opacity: 0.25;
+    image-color: #454545;
     pointer-events: none;
-}
-
-@keyframes title-phone-zoom {
-    from { transform: translate(23vw, 28vh) scale(0.42); }
-    to { transform: translate(0vw, 0vh) scale(1); }
-}
-#phone.title-phone {
-    left: 50%;
-    top: 0.2vh;
-    right: auto;
-    bottom: auto;
-    width: 125vh;
-    height: 266.25vh;
-    margin-left: -62.5vh;
-    transform-origin: 50% 20%;
-    animation: 0.36s cubic-out title-phone-zoom;
-}
-
-@keyframes title-phone-depart {
-    from { transform: scale(1); }
-    to { transform: scale(1.12); }
-}
-#phone.title-phone.departing {
-    transform: scale(1.12);
-    animation: 0.16s cubic-in title-phone-depart;
 }
 
 #title-menu, #title-level-select {
@@ -45,8 +19,8 @@ body {
     height: 100%;
 }
 #title-menu h1 {
-    margin: 5vh 0 0;
-    font-size: 5.2vh;
+    margin: 2.094vh 0 0;
+    font-size: 2.177vh;
     color: #f7ead7;
     pointer-events: none;
 }
@@ -70,7 +44,7 @@ body {
 }
 #title-menu .title-exit-glyph {
     height: auto;
-    font-size: 7.8vh;
+    font-size: 3.266vh;
     line-height: 1;
 }
 #title-exit:hover .title-exit-glyph, #title-exit:focus-visible .title-exit-glyph {
@@ -81,29 +55,29 @@ body {
     left: 0;
     right: 0;
     bottom: 10%;
-    font-size: 2.55vh;
+    font-size: 1.068vh;
     pointer-events: none;
 }
 
 #title-level-select h2 {
-    margin: 2.3vh 0 1.2vh;
-    font-size: 3.8vh;
+    margin: 0.963vh 0 0.502vh;
+    font-size: 1.591vh;
     color: #f7ead7;
 }
 .title-action {
     display: block;
     box-sizing: border-box;
     width: 82%;
-    height: 5.25vh;
-    margin: 0.5vh auto;
-    padding: 0 1.4vh;
+    height: 2.198vh;
+    margin: 0.209vh auto;
+    padding: 0 0.586vh;
     font-family: Sony Sketch EF;
     font-weight: bold;
-    font-size: 2.7vh;
+    font-size: 1.131vh;
     text-align: left;
     color: white;
-    border: 1.5dp #646464;
-    border-radius: 0.64vh;
+    border: 1dp #646464;
+    border-radius: 0.268vh;
     background-color: transparent;
     pointer-events: auto;
 }
@@ -114,17 +88,4 @@ body {
 }
 #title-back {
     text-align: center;
-}
-#title-error {
-    position: absolute;
-    left: 5%;
-    bottom: 3%;
-    width: 90%;
-    margin: 0;
-    font-size: 2.5vh;
-    color: #ff5c48;
-    pointer-events: none;
-}
-.hidden {
-    display: none;
 }
