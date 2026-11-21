@@ -5,6 +5,8 @@ PhoneMenu.__index = PhoneMenu
 
 local UNFOLD_SECONDS = 0.62
 local ZOOM_SECONDS = 0.38
+local CLOSE_SECONDS = 0.42
+local CLOSED_SECONDS = 0.06
 
 -- Positions are offsets from the gameplay phone's top-left corner.
 local GAME = {xvw = 0, xvh = 0, yvh = 0, scale = 1}
@@ -13,6 +15,10 @@ local MENU = {xvw = -50.55, xvh = -10.16, yvh = -41.49, scale = 2.3882}
 
 local function mix(from, to, progress)
     return from + (to - from) * progress
+end
+
+local function smoothstep(value)
+    return value * value * (3 - 2 * value)
 end
 
 local function opacity(element, value)
@@ -82,9 +88,7 @@ function PhoneMenu.new(document, startLevel)
     assert(document:On("title-back", "click", function()
         if self.phase == "menu" then self:showLevels(false) end
     end))
-    assert(document:On("title-exit", "click", function()
-        if self.phase == "menu" then Game.Quit() end
-    end))
+    assert(document:On("title-exit", "click", function() self:exit() end))
     return self
 end
 
@@ -102,7 +106,7 @@ function PhoneMenu:beginZoom(phase, from, to)
     assert(self.anchor:SetClass("switching", true))
     assert(self.backdrop:SetClass("hidden", false))
     assert(self.menuScreen:SetClass("hidden", false))
-    assert(self.playScreen:SetClass("hidden", from == INTRO))
+    assert(self.playScreen:SetClass("hidden", from == INTRO or to == INTRO))
     self:drawZoom(0)
 end
 
@@ -110,6 +114,10 @@ function PhoneMenu:play(id)
     if self.phase ~= "menu" or not Levels.hasLevel(id) then return end
     self.startLevel(id)
     self:beginZoom("zoomingOut", MENU, GAME)
+end
+
+function PhoneMenu:exit()
+    if self.phase == "menu" then self:beginZoom("zoomingOut", MENU, INTRO) end
 end
 
 function PhoneMenu:show()
@@ -121,27 +129,45 @@ end
 function PhoneMenu:drawZoom(progress)
     self:setPose(self.from, self.to, progress)
     local menuWeight = self.phase == "zoomingIn" and progress or 1 - progress
-    opacity(self.backdrop, self.from == INTRO and 1 or menuWeight)
+    opacity(self.backdrop, (self.from == INTRO or self.to == INTRO) and 1 or menuWeight)
     opacity(self.menuScreen, math.max(0, menuWeight * 2 - 1))
     opacity(self.playScreen, math.max(0, 1 - menuWeight * 2))
 end
 
 function PhoneMenu:update(dt)
-    if self.phase == "menu" or self:isPlaying() then return end
+    if self.phase == "menu" or self.phase == "quitting" or self:isPlaying() then return end
     self.elapsed = self.elapsed + dt
     if self.phase == "unfolding" then
         local progress = math.min(self.elapsed / UNFOLD_SECONDS, 1)
-        self:setHinge(progress * progress * (3 - 2 * progress))
+        self:setHinge(smoothstep(progress))
         if progress == 1 then
             assert(self.hinge:SetProperty("transform", "none"))
             self:beginZoom("zoomingIn", INTRO, MENU)
         end
         return
     end
+    if self.phase == "closing" then
+        local progress = math.min(self.elapsed / CLOSE_SECONDS, 1)
+        self:setHinge(1 - smoothstep(progress))
+        if progress == 1 then self.phase, self.elapsed = "closed", 0 end
+        return
+    end
+    if self.phase == "closed" then
+        if self.elapsed >= CLOSED_SECONDS then
+            self.phase = "quitting"
+            Game.Quit()
+        end
+        return
+    end
 
     local progress = math.min(self.elapsed / ZOOM_SECONDS, 1)
-    self:drawZoom(progress * progress * (3 - 2 * progress))
+    self:drawZoom(smoothstep(progress))
     if progress < 1 then return end
+    if self.to == INTRO then
+        assert(self.menuScreen:SetClass("hidden", true))
+        self.phase, self.elapsed = "closing", 0
+        return
+    end
 
     local inMenu = self.phase == "zoomingIn"
     self.phase = inMenu and "menu" or "playing"
