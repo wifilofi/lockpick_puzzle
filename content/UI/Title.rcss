@@ -19,8 +19,8 @@
     height: 100%;
 }
 #title-menu h1 {
-    margin: 2.094vh 0 0;
-    font-size: 2.177vh;
+    margin: 0.962em 0 0;
+    font-size: 2.177em;
     color: #f7ead7;
     pointer-events: none;
 }
@@ -44,7 +44,7 @@
 }
 #title-menu .title-exit-glyph {
     height: auto;
-    font-size: 3.266vh;
+    font-size: 3.266em;
     line-height: 1;
 }
 #title-exit:hover .title-exit-glyph, #title-exit:focus-visible .title-exit-glyph {
@@ -55,29 +55,29 @@
     left: 0;
     right: 0;
     bottom: 10%;
-    font-size: 1.068vh;
+    font-size: 1.068em;
     pointer-events: none;
 }
 
 #title-level-select h2 {
-    margin: 0.963vh 0 0.502vh;
-    font-size: 1.591vh;
+    margin: 0.605em 0 0.315em;
+    font-size: 1.591em;
     color: #f7ead7;
 }
 .title-action {
     display: block;
     box-sizing: border-box;
     width: 82%;
-    height: 2.198vh;
-    margin: 0.209vh auto;
-    padding: 0 0.586vh;
+    height: 1.944em;
+    margin: 0.185em auto;
+    padding: 0 0.518em;
     font-family: Sony Sketch EF;
     font-weight: bold;
-    font-size: 1.131vh;
+    font-size: 1.131em;
     text-align: left;
     color: white;
     border: 1dp #646464;
-    border-radius: 0.268vh;
+    border-radius: 0.237em;
     background-color: transparent;
     pointer-events: auto;
 }
