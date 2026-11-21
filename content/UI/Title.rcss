@@ -1,6 +1,5 @@
 body {
-    background-color: #111b1a;
-    color: #f4eee2;
+    background-color: #0b1212;
 }
 #title-backdrop {
     position: absolute;
@@ -9,54 +8,113 @@ body {
     width: 100%;
     height: 100%;
     decorator: image("Title/SPR_Door.png" cover);
-    opacity: 0.52;
+    opacity: 0.25;
     pointer-events: none;
 }
-#title-panel {
-    position: absolute;
-    left: 9%;
-    top: 23%;
-    width: 33%;
-    padding: 3.2vh;
-    box-sizing: border-box;
-    background-color: #111a19ed;
-    border: 1dp #615346;
+
+@keyframes title-phone-zoom {
+    from { transform: translate(23vw, 28vh) scale(0.42); }
+    to { transform: translate(0vw, 0vh) scale(1); }
 }
-#title-panel h1 {
+#phone.title-phone {
+    left: 50%;
+    top: 0.2vh;
+    right: auto;
+    bottom: auto;
+    width: 125vh;
+    height: 266.25vh;
+    margin-left: -62.5vh;
+    transform-origin: 50% 20%;
+    animation: 0.48s cubic-out title-phone-zoom;
+}
+
+#title-menu, #title-level-select {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+#title-menu h1 {
+    margin: 5vh 0 0;
+    font-size: 5.2vh;
+    color: #f7ead7;
+    pointer-events: none;
+}
+#title-menu .phone-icon {
+    top: 34%;
+    height: 39%;
+    color: white;
     font-family: Sony Sketch EF;
     font-weight: bold;
-    font-size: 5.1vh;
-    color: #f7ead7;
-    margin: 0 0 2.4vh;
 }
-#title-panel h2 {
-    font-size: 2vh;
-    font-weight: normal;
-    margin: 0 0 1vh;
-    color: #cdbdae;
+#title-menu .phone-glyph {
+    top: 35%;
+    width: 64%;
+    height: 50%;
+}
+#title-play .phone-glyph {
+    decorator: image("Phone/ico_next.png" contain);
+}
+#title-choose-level .phone-glyph {
+    decorator: image("Phone/ico_info.png" contain);
+}
+#title-menu .title-exit-glyph {
+    height: auto;
+    font-size: 7.8vh;
+    line-height: 1;
+}
+#title-exit:hover .title-exit-glyph, #title-exit:focus-visible .title-exit-glyph {
+    color: #eb8929;
+}
+.title-icon-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10%;
+    font-size: 2.55vh;
+    pointer-events: none;
+}
+
+#title-level-select h2 {
+    margin: 2.3vh 0 1.2vh;
+    font-size: 3.8vh;
+    color: #f7ead7;
 }
 .title-action {
     display: block;
     box-sizing: border-box;
-    width: 100%;
-    margin: 0 0 0.7vh;
-    padding: 1.05vh 1.25vh;
-    font-size: 2vh;
+    width: 82%;
+    height: 5.25vh;
+    margin: 0.5vh auto;
+    padding: 0 1.4vh;
+    font-family: Sony Sketch EF;
+    font-weight: bold;
+    font-size: 2.7vh;
     text-align: left;
-    color: #f4eee2;
-    border: 1dp #6e6255;
-    background-color: #232d2b;
+    color: white;
+    border: 1.5dp #646464;
+    border-radius: 0.64vh;
+    background-color: transparent;
+    pointer-events: auto;
 }
 .title-action:hover, .title-action:focus-visible {
     border-color: #eb8929;
-    background-color: #454032;
+    background-color: transparent;
+    color: #eb8929;
 }
-#title-play {
-    border-color: #a8754d;
+#title-back {
+    text-align: center;
 }
 #title-error {
+    position: absolute;
+    left: 5%;
+    bottom: 3%;
+    width: 90%;
     margin: 0;
-    color: #f0ab91;
+    font-size: 2.5vh;
+    color: #ff5c48;
+    pointer-events: none;
 }
 .hidden {
     display: none;
