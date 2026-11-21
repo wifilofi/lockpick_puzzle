@@ -3,8 +3,9 @@ local LockView = require("Scripts.Lockpick.LockView")
 local PickHandView = require("Scripts.Lockpick.PickHandView")
 local Hud = require("Scripts.Lockpick.Hud")
 local PuzzleSolver = require("Scripts.Lockpick.PuzzleSolver")
+local ScreenTransition = require("Scripts.Lockpick.ScreenTransition")
 
-local flow, round, view, hand, hud
+local flow, round, view, hand, hud, transition
 local leaving = false
 
 local function refreshHud()
@@ -12,6 +13,7 @@ local function refreshHud()
 end
 
 local function selectCard(key)
+    if transition:isActive() then return end
     if round:selectKey(key) then refreshHud() end
 end
 
@@ -22,21 +24,27 @@ local function refreshRound()
 end
 
 local function restart()
+    if transition:isActive() then return end
     flow:restart()
     refreshRound()
 end
 
 local function retry()
-    if flow:retry() then refreshRound() end
+    transition:cover(function()
+        if flow:retry() then refreshRound() end
+    end)
 end
 
 local function advance()
-    if not flow:advance() then return end
-    refreshRound()
-    hud:queueEntrance()
+    transition:cover(function()
+        if not flow:advance() then return end
+        refreshRound()
+        hud:queueEntrance()
+    end)
 end
 
 local function requestHint()
+    if transition:isActive() then return end
     if not round:isReady() then return end
     local slot = PuzzleSolver.findWinningCard(
         round.occupied, round.target, round.attempts, round.hand, round.linkPartners, round.springs)
@@ -44,17 +52,17 @@ local function requestHint()
 end
 
 local function undo()
+    if transition:isActive() then return end
     if flow:undo() then refreshRound() end
 end
 
 local function showTitle()
-    if leaving then return end
-    local ok, detail = Autoloads.SessionNavigation.ShowTitle()
-    if ok then
-        leaving = true
-    else
-        Log.warning(detail)
-    end
+    transition:cover(function()
+        local ok, detail = Autoloads.SessionNavigation.ShowTitle()
+        if not ok then Log.warning(detail) end
+        leaving = ok
+        return ok
+    end)
 end
 
 function OnStart()
@@ -70,6 +78,7 @@ function OnStart()
         undo = undo,
         showTitle = showTitle,
     })
+    transition = ScreenTransition.new(hud.document)
     local camera = assert(Scene.FindByName("Play camera"), "Missing play camera")
     hand = PickHandView.new(hud.document, camera, view:pickContact())
     refreshRound()
@@ -78,8 +87,10 @@ end
 
 function OnUpdate(dt)
     if leaving then return end
+    transition:update(dt)
+    if leaving then return end
     hud:updateEntrance()
-    if hud:pollInput() then return end
+    if not transition:isActive() and hud:pollInput() then return end
     if not round:isAnimating() then return end
     local previousStatus, previousAttempts, previousResult = round.status, round.attempts, round.result
     local phase, progress, elapsed = round:update(dt)
