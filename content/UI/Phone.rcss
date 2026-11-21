@@ -133,3 +133,96 @@
     height: 76%;
     decorator: image("Phone/ico_next.png" contain);
 }
+
+/* Two 0.09s flashes, each followed by a 0.12s pause. */
+@keyframes phone-result-blink {
+    from { opacity: 1; }
+    21% { opacity: 1; }
+    22% { opacity: 0; }
+    49% { opacity: 0; }
+    50% { opacity: 1; }
+    71% { opacity: 1; }
+    72% { opacity: 0; }
+    to { opacity: 0; }
+}
+#phone-result-flash {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ebf5ff;
+    opacity: 0;
+    pointer-events: none;
+}
+#phone-result-flash.blinking {
+    animation: 0.42s linear phone-result-blink;
+}
+#phone-screen.result-pending .phone-icon {
+    pointer-events: none;
+    focus: none;
+}
+.phone-result-action {
+    display: none;
+}
+#phone-result-message {
+    display: none;
+    position: absolute;
+    left: 9%;
+    top: 8%;
+    width: 82%;
+    height: 52%;
+    box-sizing: border-box;
+    border: 1dp #aaaab0;
+    border-radius: 0.6vh;
+    background-color: #060608;
+    pointer-events: none;
+}
+#phone-result-icon {
+    position: absolute;
+    left: 38%;
+    top: 9%;
+    width: 24%;
+    height: 45%;
+    decorator: image("Phone/ico_message.png" contain);
+    pointer-events: none;
+}
+#phone-screen.result-visible #phone-result-message {
+    display: block;
+}
+#phone-screen.result-visible #phone-label {
+    top: 36%;
+    font-size: 3.2vh;
+    color: #ff5c48;
+}
+#phone-screen.result-visible.victory #phone-label {
+    color: #96eb8c;
+}
+#phone-screen.result-visible #phone-select,
+#phone-screen.result-visible #hint,
+#phone-screen.result-visible #undo.unavailable {
+    display: none;
+}
+#phone-screen.result-visible .phone-icon {
+    top: 65%;
+    height: 29%;
+}
+#phone-screen.result-visible .phone-glyph {
+    top: 37%;
+    height: 62%;
+}
+#phone-screen.result-visible .phone-result-action {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 1%;
+    color: white;
+    font-size: 1.55vh;
+    pointer-events: none;
+}
+#phone-screen.result-visible #undo,
+#phone-screen.result-visible.victory #restart { left: 5%; }
+#phone-screen.result-visible #restart,
+#phone-screen.result-visible #next-level { left: 35%; }
+#phone-screen.result-visible #phone-home { left: 65%; }

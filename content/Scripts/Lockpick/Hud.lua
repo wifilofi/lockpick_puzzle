@@ -12,27 +12,18 @@ local HUD_STATUS = {
     openingDoor = "Opening the door…",
 }
 
-local HUD_RESULTS = {
-    won = "Door opened",
-    lost = "Shock! That socket was occupied.",
-}
-
 function Hud.new(actions)
     local document = assert(UI.LoadDocument("game/UI/Lockpick.rml"))
     local self = setmetatable({
         document = document,
-        entrancePanels = {
-            assert(document:GetElement("card-panel")),
-            (assert(document:GetElement("phone"))),
-        },
+        keypad = assert(document:GetElement("card-panel")),
+        phone = assert(document:GetElement("phone")),
         title = assert(document:GetElement("level")),
         attemptsLabel = assert(document:GetElement("attempts")),
         linkHelp = assert(document:GetElement("link-help")),
         springHelp = assert(document:GetElement("spring-help")),
         message = assert(document:GetElement("message")),
-        result = assert(document:GetElement("result")),
-        lossDim = assert(document:GetElement("loss-dim")),
-        resultText = assert(document:GetElement("outcome")),
+        resultDim = assert(document:GetElement("result-dim")),
         controls = assert(Input.GetContext("Lockpick")),
         actions = actions,
     }, Hud)
@@ -48,7 +39,8 @@ function Hud:show()
     assert(self.document:Show("interactive"))
 end
 
-function Hud:queueEntrance()
+function Hud:queueEntrance(keypadOnly)
+    self.entrancePanels = keypadOnly and {self.keypad} or {self.keypad, self.phone}
     for _, panel in ipairs(self.entrancePanels) do
         assert(panel:SetClass("entering", false))
         assert(panel:SetClass("below-screen", true))
@@ -108,16 +100,18 @@ function Hud:update(round, canAdvance)
         self.displayedStatus = round.status
         assert(self.message:SetText(HUD_STATUS[round.status] or ""))
     end
-    local outcome = HUD_RESULTS[round.result] or ""
-    if self.displayedOutcome ~= outcome then
-        self.displayedOutcome = outcome
-        assert(self.resultText:SetText(outcome))
-        assert(self.result:SetClass("hidden", outcome == ""))
-    end
-    local lost = round.result == "lost"
-    if self.displayedLossDim ~= lost then
-        assert(self.lossDim:SetClass("dimmed", lost))
-        self.displayedLossDim = lost
+    if self.outcome ~= round.result then
+        local wasWon = self.outcome == "won"
+        local won = round.result == "won"
+        self.outcome = round.result
+        assert(self.resultDim:SetClass("dimmed", self.outcome ~= nil))
+        if won then
+            assert(self.keypad:SetClass("entering", false))
+            assert(self.keypad:SetClass("retracted", true))
+        elseif wasWon then
+            self:queueEntrance(true)
+            assert(self.keypad:SetClass("retracted", false))
+        end
     end
     self.phonePanel:update(round, canAdvance)
     self.cardPanel:update(round.hand, round.handSlots, round.cardCount)
