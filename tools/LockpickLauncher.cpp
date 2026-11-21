@@ -206,6 +206,6 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int) {
     }
     const int result = run();
     UnhookWindowsHookEx(hook);
-    FreeLibrary(runtime);
+    // Keep the SRI runtime loaded until process exit so COM can finish teardown.
     return result;
 }
