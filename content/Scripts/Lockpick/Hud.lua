@@ -21,6 +21,10 @@ function Hud.new(actions)
     local document = assert(UI.LoadDocument("game/UI/Lockpick.rml"))
     local self = setmetatable({
         document = document,
+        entrancePanels = {
+            assert(document:GetElement("card-panel")),
+            (assert(document:GetElement("phone"))),
+        },
         title = assert(document:GetElement("level")),
         attemptsLabel = assert(document:GetElement("attempts")),
         linkHelp = assert(document:GetElement("link-help")),
@@ -40,7 +44,29 @@ function Hud.new(actions)
 end
 
 function Hud:show()
+    self:queueEntrance()
     assert(self.document:Show("interactive"))
+end
+
+function Hud:queueEntrance()
+    for _, panel in ipairs(self.entrancePanels) do
+        assert(panel:SetClass("entering", false))
+        assert(panel:SetClass("below-screen", true))
+    end
+    -- Let RmlUi apply the offscreen state before restarting the animation.
+    self.entranceFrames = 2
+end
+
+function Hud:updateEntrance()
+    if not self.entranceFrames then return end
+    self.entranceFrames = self.entranceFrames - 1
+    if self.entranceFrames > 0 then return end
+
+    self.entranceFrames = nil
+    for _, panel in ipairs(self.entrancePanels) do
+        assert(panel:SetClass("below-screen", false))
+        assert(panel:SetClass("entering", true))
+    end
 end
 
 function Hud:pollInput()

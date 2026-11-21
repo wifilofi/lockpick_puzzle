@@ -31,7 +31,9 @@ local function retry()
 end
 
 local function advance()
-    if flow:advance() then refreshRound() end
+    if not flow:advance() then return end
+    refreshRound()
+    hud:queueEntrance()
 end
 
 local function requestHint()
@@ -76,6 +78,7 @@ end
 
 function OnUpdate(dt)
     if leaving then return end
+    hud:updateEntrance()
     if hud:pollInput() then return end
     if not round:isAnimating() then return end
     local previousStatus, previousAttempts, previousResult = round.status, round.attempts, round.result

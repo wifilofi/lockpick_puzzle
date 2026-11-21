@@ -2,7 +2,10 @@
     from { transform: translateY(100%); }
     to { transform: translateY(0%); }
 }
-#card-panel, #phone {
+#card-panel.below-screen, #phone.below-screen {
+    transform: translateY(100%);
+}
+#card-panel.entering, #phone.entering {
     animation: 0.34s cubic-out hud-rise;
 }
 
