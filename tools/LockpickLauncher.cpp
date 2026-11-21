@@ -138,6 +138,12 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM key, LPARAM flags,
         return 0;
     }
     switch (message) {
+    case WM_SYSCOMMAND:
+        if ((key & 0xfff0) == SC_MAXIMIZE) {
+            ToggleFullscreen();
+            return 0;
+        }
+        break;
     case Initialize:
         FitWindowed(window, Client(window));
         return 0;
