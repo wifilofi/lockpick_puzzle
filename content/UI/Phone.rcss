@@ -1,14 +1,21 @@
-#phone {
-    /* The two original photographs share a hinge. The base extends below the stage. */
+#phone-anchor {
     position: absolute;
     z-index: 2;
     right: -0.55vw;
     bottom: -53.18vh;
     width: 52.34vh;
     height: 111.49vh;
+    transform-origin: 0 0;
     pointer-events: none;
 }
-#phone-base, #phone-lid {
+#phone, #phone-front, #phone-play, #phone-menu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+#phone-base, #phone-hinge, #phone-lid, #phone-back {
     position: absolute;
     left: 0;
     width: 100%;
@@ -18,17 +25,27 @@
     height: 55.78%;
     decorator: image("Phone/SPR_LockPhone_Down.png");
 }
-#phone-lid {
+#phone-hinge {
     top: 0;
     height: 45.03%;
+    transform-origin: 50% 104%;
+}
+#phone-lid, #phone-back {
+    top: 0;
+    height: 100%;
+}
+#phone-lid {
     decorator: image("Phone/SPR_LockPhone_Up.png");
+}
+#phone-back {
+    decorator: image("Phone/SPR_LockPhone_Back.png");
 }
 #phone-screen {
     position: absolute;
     left: 29%;
-    top: 8.6%;
+    top: 19.1%;
     width: 40.69%;
-    height: 23.16%;
+    height: 51.43%;
     border-radius: 0.79vh;
     overflow: hidden;
     background-color: #101010;
@@ -37,6 +54,10 @@
     font-family: Sony Sketch EF;
     font-weight: bold;
     text-align: center;
+}
+#phone-anchor.switching button {
+    pointer-events: none;
+    focus: none;
 }
 #phone-glass {
     position: absolute;

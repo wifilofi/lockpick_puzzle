@@ -1,15 +1,6 @@
 {
-  "autoloads": [
-    {
-      "name": "SessionNavigation",
-      "script": {
-        "id": "e59c3076-e7d7-47fd-b3f7-d1426271cae0",
-        "path": "game/Scripts/Lockpick/SessionNavigation.lua"
-      },
-      "enabled": true
-    }
-  ],
+  "autoloads": [],
   "name": "lockpick_puzzle",
-  "startupScene": "game/scenes/title.scene.json",
+  "startupScene": "game/scenes/main.scene.json",
   "version": 2
 }

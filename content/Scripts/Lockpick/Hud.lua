@@ -35,7 +35,6 @@ function Hud.new(actions)
 end
 
 function Hud:show()
-    self:queueEntrance()
     assert(self.document:Show("interactive"))
 end
 
