@@ -5,11 +5,16 @@ LockView.__index = LockView
 
 local FLASH_TIME, FLASH_INTENSITY = 0.22, 5.5
 local BULB_INTENSITY = 1.7
--- Unity stage pixels at the closed door, mapped to SRI's fixed play camera.
+-- Lock art and screwdriver contact use the fixed play camera coordinates.
 local PIXEL = 2 * 7.2 * math.tan(0.72 / 2) / 1080
 local LOCK_Y = 0.05 + (540 - 379) * PIXEL
 local SOCKET_RADIUS = 180.8 * PIXEL
-local HINGE_TO_LOCK = 992 * PIXEL
+-- The mesh pivots match the FBX. These offsets mount the playable dial on its door.
+local SAFE_PATH = "game/Models/Safe/"
+local HINGE_TO_LOCK = 1.0852
+local HINGE_DEPTH = -0.0137
+local HANDLE_OFFSET_X = 2.5766
+local HANDLE_OFFSET_Z = -0.0416
 local FACE_Z = 0.052
 local CUBE = "engine/primitives/cube/model.obj"
 local CYLINDER = "game/Meshes/Cylinder.obj"
@@ -32,6 +37,11 @@ local function part(name, mesh, finish, position, scale, parent)
         scale = scale,
         components = { MeshRenderer = { mesh = mesh, materialInstance = finish } },
     })
+end
+
+local function safePart(name, finish, position, parent)
+    return part("Safe " .. name, SAFE_PATH .. name .. ".obj", SAFE_PATH .. finish .. ".material-instance.json",
+        position, v(8.8, 6.25, 6.25), parent)
 end
 
 local function sprite(name, position, width, height, parent, mesh)
@@ -63,18 +73,18 @@ end
 function LockView.new()
     local self = setmetatable({ sockets = {}, socketMarkers = {} }, LockView)
     local artSize = 756 * 0.8 * PIXEL
-    self.hinge = Scene.Spawn("Door hinge", { position = v(-HINGE_TO_LOCK, 0, 0) })
-    sprite("Door", v(512 * PIXEL, -101 * PIXEL, 0), 1024 * PIXEL, 1810 * PIXEL, self.hinge)
-    self.handle = Scene.Spawn("Handle pivot", {
+    safePart("Cabinet", "CabinetMetal", v(0, LOCK_Y, 0))
+    safePart("Frame", "HardwareMetal", v(0, LOCK_Y, 0))
+    self.hinge = Scene.Spawn("Safe door hinge", { position = v(-HINGE_TO_LOCK, LOCK_Y, HINGE_DEPTH) })
+    safePart("Door", "CabinetMetal", v(0, 0, 0), self.hinge)
+    self.handle = Scene.Spawn("Safe handle pivot", {
         parent = self.hinge,
-        position = v(HINGE_TO_LOCK + 0.22, LOCK_Y - 0.08, 0.014),
+        position = v(HANDLE_OFFSET_X, 0, HANDLE_OFFSET_Z),
     })
-    local handleWidth, handleHeight = 1024 * 0.9384 * PIXEL, 256 * 0.9384 * PIXEL
-    sprite("Handle", v(handleWidth * (0.5 - 0.18997), handleHeight * (0.5 - 0.43342), 0),
-        handleWidth, handleHeight, self.handle)
+    safePart("Handle", "HardwareMetal", v(0, 0, 0), self.handle)
 
-    sprite("Lock backing", v(HINGE_TO_LOCK, LOCK_Y, 0.026), artSize, artSize, self.hinge)
-    self.rotor = Scene.Spawn("Lock rotor", { parent = self.hinge, position = v(HINGE_TO_LOCK, LOCK_Y, 0.037) })
+    sprite("Lock backing", v(HINGE_TO_LOCK, 0, 0.026 - HINGE_DEPTH), artSize, artSize, self.hinge)
+    self.rotor = Scene.Spawn("Lock rotor", { parent = self.hinge, position = v(HINGE_TO_LOCK, 0, 0.037 - HINGE_DEPTH) })
     sprite("Lock plate", v(0, 0, 0), artSize, artSize, self.rotor, PLATE)
     sprite("Lock plug", v(0, 0, 0.005), artSize, artSize, self.rotor)
     self.marker = sprite("Contact ring", v(0, LOCK_Y - SOCKET_RADIUS, FACE_Z + 0.013), 0.52, 0.52)
@@ -189,7 +199,7 @@ function LockView:update(round, phase, progress, elapsed)
         local pull = handlePull(open)
         self.handle:SetEulerAngles(v(0, 28 * pull, -22 * pull))
         self:setAngle(round.angleTo, 90 * open)
-        self.hinge:SetEulerAngles(v(0, 120 * smoothstep(progress), 0))
+        self.hinge:SetEulerAngles(v(0, -110 * smoothstep(progress), 0))
         local markerSize = 0.52 * (1 - 0.99 * open)
         self.marker:SetScale(v(markerSize, markerSize, 1))
     end
