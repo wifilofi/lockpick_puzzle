@@ -87,8 +87,8 @@ function LockView.new()
     self.marker = part("Strike guide", SAFE_PATH .. "StrikeGuide.obj", GUIDE,
         v(0, LOCK_Y - SOCKET_RADIUS, SOCKET_FACE_Z + 0.012), v(1, 1, 1))
 
-    pointLight("Safe key light", v(-1.5, 2.8, 3.25), v(1, 0.91, 0.78), 8.5, nil, 3.3)
-    pointLight("Safe fill light", v(2.2, 1.9, 2.8), v(0.62, 0.79, 1), 7, nil, 1.15)
+    pointLight("Safe key light", v(-1.9, 2.9, 3.55), v(1, 0.95, 0.87), 8.5, nil, 4.1)
+    pointLight("Safe fill light", v(2.75, 0.9, 2.65), v(0.74, 0.85, 1), 7, nil, 1.65)
     self.interiorLight = pointLight("Safe interior light", v(0.30, LOCK_Y + 0.65, -0.75), v(1, 0.76, 0.48), 3.0)
     self.shockFlash = pointLight("Shock flash", v(0, LOCK_Y - SOCKET_RADIUS, 0.85), v(1, 0.78, 0.50), 3.9)
     return self

@@ -1,19 +1,18 @@
 {
   "version": 2,
   "material": {
-    "id": "37ed2583-96ec-4820-b86c-281450224e4d",
-    "path": "engine/primitives/default.material.json"
+    "id": "c44984cc-ad0f-4215-8561-0fc03070696a",
+    "path": "game/Models/Safe/Steel.material.json"
   },
   "parameters": {
     "albedoTexture": {
-      "id": "e0263125-bafb-40dc-b0c5-612a01e2959f",
-      "path": "game/Models/Safe/HardwareMetal.jpg"
+      "id": "8ec28cea-b4ab-4030-ba00-e8929fc830f8",
+      "path": "game/Models/Safe/HardwareSteel.dds"
     },
     "specularColor": [
       0.8,
       0.79,
       0.75
-    ],
-    "shininess": 60
+    ]
   }
 }
