@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "shaderFile": {
+    "id": "42c10ac7-83e2-4a59-9c6c-133606dbc883",
+    "path": "game/Shaders/SafeSteel.hlsl"
+  },
+  "hooks": [
+    "GBufferPS"
+  ]
+}

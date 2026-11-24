@@ -1,19 +1,18 @@
 {
   "version": 2,
   "material": {
-    "id": "37ed2583-96ec-4820-b86c-281450224e4d",
-    "path": "engine/primitives/default.material.json"
+    "id": "c44984cc-ad0f-4215-8561-0fc03070696a",
+    "path": "game/Models/Safe/Steel.material.json"
   },
   "parameters": {
     "albedoTexture": {
-      "id": "8bdcc4f1-98e7-4fa3-920d-b06bb291b0fa",
-      "path": "game/Models/Safe/CabinetMetal.jpg"
+      "id": "46caa84b-7983-462b-80f8-235f559ec36e",
+      "path": "game/Models/Safe/CabinetSteel.dds"
     },
     "specularColor": [
       0.5,
       0.48,
       0.44
-    ],
-    "shininess": 30
+    ]
   }
 }
