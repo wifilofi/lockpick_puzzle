@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "material": {
+    "id": "37ed2583-96ec-4820-b86c-281450224e4d",
+    "path": "engine/primitives/default.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "8bdcc4f1-98e7-4fa3-920d-b06bb291b0fa",
+      "path": "game/Models/Safe/CabinetMetal.jpg"
+    },
+    "specularColor": [
+      0.5,
+      0.48,
+      0.44
+    ],
+    "shininess": 30
+  }
+}
