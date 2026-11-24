@@ -4,28 +4,26 @@ local LockView = {}
 LockView.__index = LockView
 
 local FLASH_TIME, FLASH_INTENSITY = 0.22, 5.5
-local BULB_INTENSITY = 1.7
+local BULB_INTENSITY = 2.2
+local INTERIOR_INTENSITY = 1.3
 -- Lock art and screwdriver contact use the fixed play camera coordinates.
 local PIXEL = 2 * 7.2 * math.tan(0.72 / 2) / 1080
 local LOCK_Y = 0.05 + (540 - 379) * PIXEL
-local SOCKET_RADIUS = 180.8 * PIXEL
+-- Measured from the authored socket ring after fitting the dial to the safe.
+local SOCKET_RADIUS = 0.5308
+local SOCKET_FACE_Z = 0.0521
 -- The mesh pivots match the FBX. These offsets mount the playable dial on its door.
 local SAFE_PATH = "game/Models/Safe/"
 local HINGE_TO_LOCK = 1.0852
 local HINGE_DEPTH = -0.0137
 local HANDLE_OFFSET_X = 2.5766
 local HANDLE_OFFSET_Z = -0.0416
-local FACE_Z = 0.052
 local CUBE = "engine/primitives/cube/model.obj"
 local CYLINDER = "game/Meshes/Cylinder.obj"
-local QUAD = "game/Meshes/LockSprite.obj"
-local PLATE = "game/Meshes/LockRing.obj"
-
-local function material(name)
-    return "game/Materials/Port/" .. name .. ".material-instance.json"
-end
-
 local DARK = "game/Materials/Dark.material-instance.json"
+local LIVE = "game/Materials/Live.material-instance.json"
+local GUIDE = "game/Materials/Shock.material-instance.json"
+local HARDWARE = SAFE_PATH .. "HardwareMetal.material-instance.json"
 local function v(x, y, z)
     return Vector3.new(x, y, z)
 end
@@ -44,15 +42,15 @@ local function safePart(name, finish, position, parent)
         position, v(8.8, 6.25, 6.25), parent)
 end
 
-local function sprite(name, position, width, height, parent, mesh)
-    return part(name, mesh or QUAD, material(name), position, v(width, height, 1), parent)
+local function lockPart(name, mesh, finish, position, parent)
+    return part(name, SAFE_PATH .. mesh .. ".obj", finish, position, v(10.6, 10.6, 6.25), parent)
 end
 
-local function pointLight(name, position, color, range, parent)
+local function pointLight(name, position, color, range, parent, intensity)
     return Scene.Spawn(name, {
         parent = parent,
         position = position,
-        components = { PointLight = { color = color, range = range, intensity = 0 } },
+        components = { PointLight = { color = color, range = range, intensity = intensity or 0 } },
     })
 end
 
@@ -72,7 +70,6 @@ end
 
 function LockView.new()
     local self = setmetatable({ sockets = {}, socketMarkers = {} }, LockView)
-    local artSize = 756 * 0.8 * PIXEL
     safePart("Cabinet", "CabinetMetal", v(0, LOCK_Y, 0))
     safePart("Frame", "HardwareMetal", v(0, LOCK_Y, 0))
     self.hinge = Scene.Spawn("Safe door hinge", { position = v(-HINGE_TO_LOCK, LOCK_Y, HINGE_DEPTH) })
@@ -83,11 +80,16 @@ function LockView.new()
     })
     safePart("Handle", "HardwareMetal", v(0, 0, 0), self.handle)
 
-    sprite("Lock backing", v(HINGE_TO_LOCK, 0, 0.026 - HINGE_DEPTH), artSize, artSize, self.hinge)
-    self.rotor = Scene.Spawn("Lock rotor", { parent = self.hinge, position = v(HINGE_TO_LOCK, 0, 0.037 - HINGE_DEPTH) })
-    sprite("Lock plate", v(0, 0, 0), artSize, artSize, self.rotor, PLATE)
-    sprite("Lock plug", v(0, 0, 0.005), artSize, artSize, self.rotor)
-    self.marker = sprite("Contact ring", v(0, LOCK_Y - SOCKET_RADIUS, FACE_Z + 0.013), 0.52, 0.52)
+    local mount = v(HINGE_TO_LOCK, 0, -HINGE_DEPTH)
+    lockPart("Safe dial", "Dial", HARDWARE, mount, self.hinge)
+    self.rotor = Scene.Spawn("Lock rotor", { parent = self.hinge, position = mount })
+    lockPart("Lock plug", "Plug", HARDWARE, v(0, 0, 0), self.rotor)
+    self.marker = part("Strike guide", SAFE_PATH .. "StrikeGuide.obj", GUIDE,
+        v(0, LOCK_Y - SOCKET_RADIUS, SOCKET_FACE_Z + 0.012), v(1, 1, 1))
+
+    pointLight("Safe key light", v(-1.5, 2.8, 3.25), v(1, 0.91, 0.78), 8.5, nil, 3.3)
+    pointLight("Safe fill light", v(2.2, 1.9, 2.8), v(0.62, 0.79, 1), 7, nil, 1.15)
+    self.interiorLight = pointLight("Safe interior light", v(0.30, LOCK_Y + 0.65, -0.75), v(1, 0.76, 0.48), 3.0)
     self.shockFlash = pointLight("Shock flash", v(0, LOCK_Y - SOCKET_RADIUS, 0.85), v(1, 0.78, 0.50), 3.9)
     return self
 end
@@ -100,11 +102,13 @@ function LockView:buildSockets(count)
     for index = 1, count do
         local radians = (index - 1) * 2 * math.pi / count
         local x, y = SOCKET_RADIUS * math.sin(radians), -SOCKET_RADIUS * math.cos(radians)
-        local root = Scene.Spawn("Socket " .. index, { parent = self.rotor, position = v(x, y, 0.015) })
-        sprite("Socket bore", v(0, 0, 0), 0.43, 0.43, root)
+        local root = Scene.Spawn("Socket " .. index, { parent = self.rotor, position = v(x, y, 0) })
+        root:SetEulerAngles(v(0, 0, math.deg(radians)))
+        lockPart("Socket housing", "Socket", HARDWARE, v(0, 0, 0), root)
+        part("Socket inset", CYLINDER, DARK, v(0, 0, 0.045), v(0.065, 0.065, 0.003), root)
         self.sockets[index] = {
             root = root,
-            bulb = pointLight("Pin bulb " .. index, v(0, 0, 0.30), v(0.15, 0.65, 1), 0.80, root),
+            bulb = pointLight("Pin bulb " .. index, v(0, 0, 0.19), v(0.15, 0.65, 1), 0.47, root),
         }
     end
 end
@@ -120,19 +124,19 @@ function LockView:showSocketMarkers(linkPairs, springs, count)
             local radians = (socket - 1) * 2 * math.pi / count
             local sine, cosine = math.sin(radians), math.cos(radians)
             for dot = 1, group do
-                local offset = (dot - (group + 1) / 2) * 0.085
-                local position = v(0.70 * sine + offset * cosine, -0.70 * cosine + offset * sine, 0.022)
+                local offset = (dot - (group + 1) / 2) * 0.052
+                local position = v(0.66 * sine + offset * cosine, -0.66 * cosine + offset * sine, 0.031)
                 self.socketMarkers[#self.socketMarkers + 1] = part(
                     ("Link %d socket %d dot %d"):format(group, socket, dot),
-                    CYLINDER, DARK, position, v(0.036, 0.036, 0.025), self.rotor)
+                    CYLINDER, DARK, position, v(0.020, 0.020, 0.016), self.rotor)
             end
         end
     end
     for _, socket in ipairs(springs) do
         local radians = (socket - 1) * 2 * math.pi / count
         local marker = part("Spring socket " .. socket, CUBE, DARK,
-            v(0.56 * math.sin(radians), -0.56 * math.cos(radians), 0.022),
-            v(0.20, 0.045, 0.025), self.rotor)
+            v(0.37 * math.sin(radians), -0.37 * math.cos(radians), 0.033),
+            v(0.12, 0.036, 0.018), self.rotor)
         marker:SetEulerAngles(v(0, 0, math.deg(radians)))
         self.socketMarkers[#self.socketMarkers + 1] = marker
     end
@@ -145,7 +149,7 @@ function LockView:syncPins(occupied)
         if socket.live ~= live then
             socket.live = live
             if live then
-                socket.pin = sprite("Live pin", v(0, 0, 0.004), 0.24, 0.24, socket.root)
+                socket.pin = lockPart("Live pin", "Pin", LIVE, v(0, 0, -0.014), socket.root)
             elseif socket.pin then
                 Scene.Destroy(socket.pin)
                 socket.pin = nil
@@ -159,11 +163,10 @@ end
 function LockView:setAngle(steps, extraDegrees)
     local degrees = steps * 360 / #self.sockets + (extraDegrees or 0)
     self.rotor:SetEulerAngles(v(0, 0, -degrees))
-    for _, socket in ipairs(self.sockets) do socket.root:SetEulerAngles(v(0, 0, degrees)) end
 end
 
 function LockView:pickContact()
-    return v(0, LOCK_Y - SOCKET_RADIUS, FACE_Z)
+    return v(0, LOCK_Y - SOCKET_RADIUS, SOCKET_FACE_Z)
 end
 
 function LockView:setShock(index)
@@ -179,7 +182,8 @@ function LockView:restart(round)
     self:syncPins(round.occupied)
     self.hinge:SetEulerAngles(v(0, 0, 0))
     self.handle:SetEulerAngles(v(0, 0, 0))
-    self.marker:SetScale(v(0.52, 0.52, 1))
+    self.marker:SetScale(v(1, 1, 1))
+    setLightIntensity(self.interiorLight, 0)
     self:setAngle(round.angleTo)
 end
 
@@ -200,8 +204,9 @@ function LockView:update(round, phase, progress, elapsed)
         self.handle:SetEulerAngles(v(0, 28 * pull, -22 * pull))
         self:setAngle(round.angleTo, 90 * open)
         self.hinge:SetEulerAngles(v(0, -110 * smoothstep(progress), 0))
-        local markerSize = 0.52 * (1 - 0.99 * open)
-        self.marker:SetScale(v(markerSize, markerSize, 1))
+        setLightIntensity(self.interiorLight, INTERIOR_INTENSITY * smoothstep(progress))
+        local markerSize = 1 - 0.99 * open
+        self.marker:SetScale(v(markerSize, markerSize, markerSize))
     end
 end
 
