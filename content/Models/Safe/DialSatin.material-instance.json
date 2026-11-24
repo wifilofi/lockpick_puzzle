@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "material": {
+    "id": "c44984cc-ad0f-4215-8561-0fc03070696a",
+    "path": "game/Models/Safe/Steel.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "8ec28cea-b4ab-4030-ba00-e8929fc830f8",
+      "path": "game/Models/Safe/HardwareSteel.dds"
+    },
+    "specularColor": [
+      0.48,
+      0.51,
+      0.57
+    ],
+    "shininess": 18
+  }
+}

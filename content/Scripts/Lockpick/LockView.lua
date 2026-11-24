@@ -23,7 +23,8 @@ local CYLINDER = "game/Meshes/Cylinder.obj"
 local DARK = "game/Materials/Dark.material-instance.json"
 local LIVE = "game/Materials/Live.material-instance.json"
 local GUIDE = "game/Materials/Shock.material-instance.json"
-local HARDWARE = SAFE_PATH .. "HardwareMetal.material-instance.json"
+local DIAL_SATIN = SAFE_PATH .. "DialSatin.material-instance.json"
+local DIAL_GRAPHITE = SAFE_PATH .. "DialGraphite.material-instance.json"
 local function v(x, y, z)
     return Vector3.new(x, y, z)
 end
@@ -81,14 +82,15 @@ function LockView.new()
     safePart("Handle", "HardwareMetal", v(0, 0, 0), self.handle)
 
     local mount = v(HINGE_TO_LOCK, 0, -HINGE_DEPTH)
-    lockPart("Safe dial", "Dial", HARDWARE, mount, self.hinge)
+    lockPart("Safe dial", "Dial", DIAL_SATIN, mount, self.hinge)
     self.rotor = Scene.Spawn("Lock rotor", { parent = self.hinge, position = mount })
-    lockPart("Lock plug", "Plug", HARDWARE, v(0, 0, 0), self.rotor)
+    lockPart("Lock plug", "Plug", DIAL_GRAPHITE, v(0, 0, 0), self.rotor)
     self.marker = part("Strike guide", SAFE_PATH .. "StrikeGuide.obj", GUIDE,
         v(0, LOCK_Y - SOCKET_RADIUS, SOCKET_FACE_Z + 0.012), v(1, 1, 1))
 
     pointLight("Safe key light", v(-1.9, 2.9, 3.55), v(1, 0.95, 0.87), 8.5, nil, 4.1)
     pointLight("Safe fill light", v(2.75, 0.9, 2.65), v(0.74, 0.85, 1), 7, nil, 1.65)
+    pointLight("Dial accent light", v(-0.72, LOCK_Y + 0.62, 1.08), v(0.88, 0.94, 1), 2.35, nil, 2.2)
     self.interiorLight = pointLight("Safe interior light", v(0.30, LOCK_Y + 0.65, -0.75), v(1, 0.76, 0.48), 3.0)
     self.shockFlash = pointLight("Shock flash", v(0, LOCK_Y - SOCKET_RADIUS, 0.85), v(1, 0.78, 0.50), 3.9)
     return self
@@ -104,7 +106,7 @@ function LockView:buildSockets(count)
         local x, y = SOCKET_RADIUS * math.sin(radians), -SOCKET_RADIUS * math.cos(radians)
         local root = Scene.Spawn("Socket " .. index, { parent = self.rotor, position = v(x, y, 0) })
         root:SetEulerAngles(v(0, 0, math.deg(radians)))
-        lockPart("Socket housing", "Socket", HARDWARE, v(0, 0, 0), root)
+        lockPart("Socket housing", "Socket", DIAL_SATIN, v(0, 0, 0), root)
         part("Socket inset", CYLINDER, DARK, v(0, 0, 0.045), v(0.065, 0.065, 0.003), root)
         self.sockets[index] = {
             root = root,

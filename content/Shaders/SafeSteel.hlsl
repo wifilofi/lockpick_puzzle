@@ -20,7 +20,9 @@ void PatchGBufferSurface(GBufferInput input, inout MaterialSurface surface)
     const float3 base = lerp(pow(color, 2.2), color, 0.33);
     surface.albedo = float4(base * lerp(1.0, 0.78, metalness), 1.0);
     surface.specularColor *= lerp(0.18, 0.92, metalness) * lerp(0.52, 1.0, gloss);
-    surface.shininess = lerp(10.0, 124.0, gloss * gloss);
+    // The engine default of 32 keeps the texture's gloss response unchanged.
+    const float highlightTightness = surface.shininess / 32.0;
+    surface.shininess = clamp(lerp(10.0, 124.0, gloss * gloss) * highlightTightness, 1.0, 256.0);
 
     // The mesh format passes no tangents to this stage. Build the UV basis
     // from world-space derivatives, including the handedness of mirrored UVs.
