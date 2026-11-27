@@ -4,8 +4,9 @@ Properties = {
     lookEnabled = true,
     brightness = 1.0,
     contrast = 1.0,
-    -- noiseAmount = 0.007,
-    -- noiseRate = 30.0,
+    grainAmount = 0.0,
+    grainSize = 1.0,
+    grainSmoothness = 0.0,
     -- lcdBefore = 0.055,
     -- lcdAfter = 0.025,
     -- hueWobble = 0.0,
@@ -39,18 +40,22 @@ local function addPosterizePass(settings, stage)
 
     local brightness = math.max(0.0, settings.brightness)
     local contrast = math.max(0.0, settings.contrast)
+    local grainAmount = clamp(settings.grainAmount, 0.0, 1.0)
     local strength = clamp(settings.posterizeStrength, 0.0, 1.0)
-    if strength == 0.0 and brightness == 1.0 and contrast == 1.0 then return end
+    if strength == 0.0 and brightness == 1.0 and contrast == 1.0 and grainAmount == 0.0 then return end
 
     local shader = Render.LoadShader("game/shaders/retroposterize.postprocess.json")
+    local grainFrame = 0
     local buffer = Render.CreateConstantBuffer {
         shader = shader,
         name = "PosterizeParams",
         values = {
             Brightness = brightness,
             Contrast = contrast,
-            -- NoiseAmount = clamp(settings.noiseAmount, 0.0, 1.0),
-            -- NoiseRate = clamp(settings.noiseRate, 0.0, 1000.0),
+            GrainAmount = grainAmount,
+            GrainInverseSize = 1.0 / math.max(1.0, settings.grainSize),
+            GrainSmoothness = clamp(settings.grainSmoothness, 0.0, 1.0),
+            GrainFrame = grainFrame,
             -- LcdBefore = clamp(settings.lcdBefore, 0.0, 1.0),
             -- LcdAfter = clamp(settings.lcdAfter, 0.0, 1.0),
             -- HueWobble = clamp(settings.hueWobble, 0.0, 0.1),
@@ -76,6 +81,10 @@ local function addPosterizePass(settings, stage)
         stage = stage,
         order = 0,
         execute = function(ctx, frame)
+            if grainAmount > 0.0 then
+                grainFrame = (grainFrame + 1) % 2147483648
+                buffer:Set("GrainFrame", grainFrame)
+            end
             ctx:SetPixelShader(shader)
             ctx:SetRenderTarget(frame.outputColor)
             ctx:BindTexture(0, frame.inputColor)

@@ -214,6 +214,7 @@ function OnUpdate(dt)
     transition:update(dt)
     menu:update(dt)
     hud:updateEntrance()
+    view:updateBulbs()
     if not menu:isPlaying() then return end
     if not transition:isActive() and hud:pollInput() then return end
     if not round:isAnimating() then return end

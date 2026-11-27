@@ -14,8 +14,10 @@ cbuffer PosterizeParams : register(b5)
 {
     float Brightness;
     float Contrast;
-    // float NoiseAmount;
-    // float NoiseRate;
+    float GrainAmount;
+    float GrainInverseSize;
+    float GrainSmoothness;
+    int GrainFrame;
     // float LcdBefore;
     // float LcdAfter;
     // float HueWobble;
@@ -174,7 +176,6 @@ float4 PictureAt(float2 uv, float texelWidth)
     return float4(DecodeBleedSignal(signal / norm), center.a);
 }
 
-/*
 // A hash of a pixel and a seed to 0..1 (24 bits), for the noise.
 float Hash(uint2 pixel, uint seed)
 {
@@ -185,6 +186,26 @@ float Hash(uint2 pixel, uint seed)
     return (h & 0xFFFFFFu) * (1.0 / 16777216.0);
 }
 
+float FilmGrain(float2 pixelPosition)
+{
+    float2 grid = (pixelPosition - 0.5) * GrainInverseSize;
+    uint2 cell = uint2(grid);
+    uint seed = uint(GrainFrame);
+    float noise = Hash(cell, seed);
+
+    [branch]
+    if (GrainSmoothness > 0.0 && GrainInverseSize < 1.0)
+    {
+        float2 blend = frac(grid);
+        float upper = lerp(noise, Hash(cell + uint2(1, 0), seed), blend.x);
+        float lower = lerp(Hash(cell + uint2(0, 1), seed), Hash(cell + uint2(1, 1), seed), blend.x);
+        noise = lerp(noise, lerp(upper, lower, blend.y), GrainSmoothness);
+    }
+
+    return (noise * 2.0 - 1.0) * GrainAmount;
+}
+
+/*
 // Adobe's Overlay of a layer s over the base b, per channel, then the layer's opacity.
 float3 Overlay(float3 b, float3 s, float opacity)
 {
@@ -295,6 +316,9 @@ float4 PSPosterize(float4 position : SV_POSITION, float2 uv : TEXCOORD0) : SV_Ta
     float3 seen = LinearToSRGB(saturate(picture.rgb)) * Brightness;
     if (Contrast != 1.0)
         seen = (seen - 0.5) * Contrast + 0.5;
+    [branch]
+    if (GrainAmount > 0.0)
+        seen += FilmGrain(position.xy);
     seen = saturate(seen);
 
     if (PosterizeStrength > 0.0)

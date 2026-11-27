@@ -41,7 +41,7 @@
             0.7900000214576721,
             1.0
           ],
-          "intensity": 0.41999998688697815
+          "intensity": 1.0
         },
         "Transform": {
           "position": [
@@ -72,8 +72,9 @@
         "Script": {
           "enabled": true,
           "properties": {
-            "bulbIntensity": 50.0,
+            "bulbIntensity": 30.0,
             "bulbRange": 0.5,
+            "dialLightIntensity": 6.2,
             "keyLightIntensity": 8.0
           },
           "script": {
@@ -118,7 +119,7 @@
         },
         "Transform": {
           "position": [
-            -2.8499999046325684,
+            2.8499999046325684,
             1.4500000476837158,
             2.25
           ],
@@ -148,13 +149,13 @@
             0.4000000059604645,
             0.11999999731779099
           ],
-          "intensity": 1.7000000476837158,
-          "range": 5.400000095367432
+          "intensity": 2.0,
+          "range": 8.0
         },
         "Transform": {
           "position": [
-            2.619999885559082,
-            0.8199999928474426,
+            -3.3651123046875,
+            -1.6350228786468506,
             1.8799999952316284
           ],
           "rotation": [
@@ -185,6 +186,10 @@
             "bleedMode": 0.0,
             "brightness": 1.15,
             "contrast": 0.9,
+            "enabled": false,
+            "grainAmount": 0.01,
+            "grainSize": 1.0,
+            "grainSmoothness": 0.0,
             "lookEnabled": true,
             "posterizeLevels": 7.0,
             "posterizeLift": 2.0,
