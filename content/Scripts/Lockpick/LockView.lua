@@ -52,7 +52,10 @@ end
 function LockView.new(settings)
     local data = createViewData(settings)
     local lights = data.lights
-    local self = setmetatable({ data = data, sockets = {}, socketMarkers = {} }, LockView)
+    local self = setmetatable({
+        data = data, sockets = {}, socketMarkers = {},
+        bulbIntensity = { intensity = lights.bulb.activeIntensity },
+    }, LockView)
     part(data.cabinet)
     part(data.frame)
     self.hinge = Scene.Spawn("Safe door hinge", { position = v(table.unpack(data.hinge)) })
@@ -140,14 +143,34 @@ function LockView:syncPins(occupied)
             socket.live = live
             if live then
                 socket.pin = part(self.data.socket.livePin, socket.root)
-            elseif socket.pin then
-                Scene.Destroy(socket.pin)
-                socket.pin = nil
+                socket.bulb:SetComponent("PointLight", self.bulbIntensity)
+            else
+                if socket.pin then
+                    Scene.Destroy(socket.pin)
+                    socket.pin = nil
+                end
+                setLightIntensity(socket.bulb, 0)
             end
-            setLightIntensity(socket.bulb, live and self.data.lights.bulb.activeIntensity or 0)
         end
     end
     self.displayedOccupancy = occupied
+end
+
+function LockView:updateBulbs()
+    local bulb = self.data.lights.bulb
+    if bulb.activeIntensity == 0 then return end
+
+    local pulseCalculated = false
+    for _, socket in ipairs(self.sockets) do
+        if socket.live then
+            if not pulseCalculated then
+                local wave = math.sin(Time.SimulationTime() * bulb.pulseAngularSpeed)
+                self.bulbIntensity.intensity = bulb.activeIntensity * (1 + bulb.pulseFraction * wave)
+                pulseCalculated = true
+            end
+            socket.bulb:SetComponent("PointLight", self.bulbIntensity)
+        end
+    end
 end
 
 function LockView:setAngle(steps, extraDegrees)

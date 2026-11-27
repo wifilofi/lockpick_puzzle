@@ -112,6 +112,7 @@ local function create(settings)
                 position = { 0, 0, settings.bulbPositionZ },
                 color = { settings.bulbColorR, settings.bulbColorG, settings.bulbColorB },
                 range = settings.bulbRange, activeIntensity = settings.bulbIntensity,
+                pulseAngularSpeed = 2 * math.pi / 6, pulseFraction = 0.6 / 4.4,
             },
         },
         animation = {
