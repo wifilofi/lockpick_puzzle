@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "shaderFile": {
+    "id": "821f8dd2-b802-4588-ab55-3d479b4f636a",
+    "path": "game/Shaders/PolishedDial.hlsl"
+  },
+  "hooks": [
+    "GBufferPS"
+  ]
+}

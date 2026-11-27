@@ -10,10 +10,10 @@
       "path": "game/Models/Safe/CabinetSteel.dds"
     },
     "specularColor": [
-      0.34,
-      0.37,
-      0.41
+      0.30,
+      0.32,
+      0.34
     ],
-    "shininess": 26
+    "shininess": 19
   }
 }

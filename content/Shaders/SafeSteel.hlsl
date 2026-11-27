@@ -1,14 +1,15 @@
 #include "engine/MaterialTemplate.hlsl"
 
 #if defined(MATERIAL_GBUFFER_PS)
-void PatchGBufferSurface(GBufferInput input, inout MaterialSurface surface)
+void ApplySafeSteel(GBufferInput input, inout MaterialSurface surface, float normalStrength, float textureTiling)
 {
     // One UNORM texture holds two padded 1024x1024 tiles with independent mips.
     // Top: sRGB base color. Bottom: OpenGL normal XY, metalness, roughness.
     const float2 tileScale = float2(1.0, 1008.0 / 2048.0);
-    const float2 uvDx = ddx(input.tex);
-    const float2 uvDy = ddy(input.tex);
-    const float2 uv = frac(input.tex) * tileScale + float2(0.0, 8.0 / 2048.0);
+    const float2 tiledUV = input.tex * textureTiling;
+    const float2 uvDx = ddx(tiledUV);
+    const float2 uvDy = ddy(tiledUV);
+    const float2 uv = frac(tiledUV) * tileScale + float2(0.0, 8.0 / 2048.0);
     const float2 atlasDx = uvDx * tileScale;
     const float2 atlasDy = uvDy * tileScale;
     const float3 color = albedoTexture.SampleGrad(LinearWrapSampler, uv, atlasDx, atlasDy).rgb;
@@ -44,8 +45,15 @@ void PatchGBufferSurface(GBufferInput input, inout MaterialSurface surface)
         bitangent = -bitangent;
 
     // The texture sampler's V axis increases down the atlas image.
-    const float2 normalXY = (finish.rg * 2.0 - 1.0) * float2(2.8, -2.8);
+    const float2 normalXY = (finish.rg * 2.0 - 1.0) * float2(normalStrength, -normalStrength);
     const float normalZ = sqrt(max(0.02, 1.0 - dot(normalXY, normalXY)));
     surface.normal = normalize(tangent * normalXY.x + bitangent * normalXY.y + normal * normalZ);
 }
+
+#if !defined(SAFE_STEEL_CUSTOM_SURFACE)
+void PatchGBufferSurface(GBufferInput input, inout MaterialSurface surface)
+{
+    ApplySafeSteel(input, surface, 2.8, 1.0);
+}
+#endif
 #endif
