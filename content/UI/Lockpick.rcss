@@ -125,6 +125,17 @@ button:hover {
     opacity: 0.5;
     transition: opacity 0.35s quadratic-out;
 }
+#fps-counter {
+    position: absolute;
+    top: 14dp;
+    right: 16dp;
+    padding: 4dp 7dp;
+    z-index: 101;
+    background-color: #16181b;
+    color: #f4eee2;
+    font-size: 14dp;
+    pointer-events: none;
+}
 .hidden {
     display: none;
 }

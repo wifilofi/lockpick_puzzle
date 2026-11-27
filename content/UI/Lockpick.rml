@@ -83,5 +83,6 @@
         </div>
     </div>
     <div id="screen-fade"></div>
+    <p id="fps-counter" class="hidden"></p>
 </body>
 </rml>

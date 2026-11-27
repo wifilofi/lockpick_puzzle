@@ -24,6 +24,10 @@ function Hud.new(actions)
         springHelp = assert(document:GetElement("spring-help")),
         message = assert(document:GetElement("message")),
         resultDim = assert(document:GetElement("result-dim")),
+        fpsLabel = assert(document:GetElement("fps-counter")),
+        fpsVisible = false,
+        fpsFrames = 0,
+        fpsElapsed = 0,
         controls = assert(Input.GetContext("Lockpick")),
         actions = actions,
     }, Hud)
@@ -31,6 +35,7 @@ function Hud.new(actions)
     self.cardPanel = CardPanel.new(document, self.controls, actions.selectCard)
     self.phonePanel = PhonePanel.new(document, actions)
     self.controls:BindAction("restart", PhysicalKey.R)
+    self.controls:BindAction("toggle-fps", PhysicalKey.Tab)
     return self
 end
 
@@ -57,6 +62,27 @@ function Hud:updateEntrance()
     for _, panel in ipairs(self.entrancePanels) do
         assert(panel:SetClass("below-screen", false))
         assert(panel:SetClass("entering", true))
+    end
+end
+
+function Hud:updateFps()
+    if self.controls:Pressed("toggle-fps") then
+        self.fpsVisible = not self.fpsVisible
+        self.fpsFrames = 0
+        self.fpsElapsed = 0
+        assert(self.fpsLabel:SetClass("hidden", not self.fpsVisible))
+        if self.fpsVisible then assert(self.fpsLabel:SetText("FPS ...")) end
+    end
+    if not self.fpsVisible then return end
+
+    local frameTime = Time.RealDelta()
+    if frameTime <= 0 then return end
+    self.fpsFrames = self.fpsFrames + 1
+    self.fpsElapsed = self.fpsElapsed + frameTime
+    if self.fpsElapsed >= 0.25 then
+        assert(self.fpsLabel:SetText(("%.0f FPS"):format(self.fpsFrames / self.fpsElapsed)))
+        self.fpsFrames = 0
+        self.fpsElapsed = 0
     end
 end
 

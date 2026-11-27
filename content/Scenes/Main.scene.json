@@ -1,176 +1,224 @@
 {
-  "version": 1,
   "activeCamera": "8d528e78-b908-41d3-a6ed-d266d229ed82",
   "directionalLight": "98ddf4e1-a644-4be9-a402-597cd9adca36",
   "entities": [
     {
+      "components": {
+        "Camera": {
+          "farPlane": 75.0,
+          "fovY": 0.7200000286102295,
+          "nearPlane": 0.10000000149011612
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.05000000074505806,
+            7.199999809265137
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
       "id": "8d528e78-b908-41d3-a6ed-d266d229ed82",
       "name": "Play camera",
       "parent": null,
-      "tags": [],
-      "components": {
-        "Transform": {
-          "position": [
-            0,
-            0.05,
-            7.2
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ],
-          "scale": [
-            1,
-            1,
-            1
-          ]
-        },
-        "Camera": {
-          "fovY": 0.72,
-          "nearPlane": 0.1,
-          "farPlane": 75
-        }
-      }
+      "tags": []
     },
     {
+      "components": {
+        "DirectionalLight": {
+          "color": [
+            0.699999988079071,
+            0.7900000214576721,
+            1.0
+          ],
+          "intensity": 0.41999998688697815
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            -0.30000001192092896,
+            0.1599999964237213,
+            0.0,
+            0.940425455570221
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
       "id": "98ddf4e1-a644-4be9-a402-597cd9adca36",
       "name": "Soft fill",
       "parent": null,
-      "tags": [],
-      "components": {
-        "Transform": {
-          "position": [
-            0,
-            0,
-            0
-          ],
-          "rotation": [
-            -0.3,
-            0.16,
-            0,
-            0.9404254356406998
-          ],
-          "scale": [
-            1,
-            1,
-            1
-          ]
-        },
-        "DirectionalLight": {
-          "color": [
-            0.7,
-            0.79,
-            1.0
-          ],
-          "intensity": 0.42
-        }
-      }
+      "tags": []
     },
     {
-      "id": "80185cd6-a96f-4d86-a1d8-c70ed7d850fb",
-      "name": "Lockpick round",
-      "parent": null,
-      "tags": [],
       "components": {
-        "Transform": {
-          "position": [
-            0,
-            0,
-            0
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ],
-          "scale": [
-            1,
-            1,
-            1
-          ]
-        },
         "Script": {
           "enabled": true,
-          "properties": {},
+          "properties": {
+            "bulbIntensity": 50.0,
+            "bulbRange": 0.5,
+            "keyLightIntensity": 8.0
+          },
           "script": {
             "id": "d52478a7-b487-4ee0-8a83-c094d137c9d1",
             "path": "game/Scripts/Lockpick.lua"
           }
-        }
-      }
-    },
-    {
-      "id": "d3fb0422-54ed-42fd-af47-0174b0df3c6d",
-      "name": "Blue light",
-      "parent": null,
-      "tags": [],
-      "components": {
+        },
         "Transform": {
           "position": [
-            -2.85,
-            1.45,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "id": "80185cd6-a96f-4d86-a1d8-c70ed7d850fb",
+      "name": "Lockpick round",
+      "parent": null,
+      "tags": []
+    },
+    {
+      "components": {
+        "PointLight": {
+          "color": [
+            0.11999999731779099,
+            0.44999998807907104,
+            1.0
+          ],
+          "intensity": 1.7999999523162842,
+          "range": 6.0
+        },
+        "Transform": {
+          "position": [
+            -2.8499999046325684,
+            1.4500000476837158,
             2.25
           ],
           "rotation": [
-            0,
-            0,
-            0,
-            1
-          ],
-          "scale": [
-            1,
-            1,
-            1
-          ]
-        },
-        "PointLight": {
-          "color": [
-            0.12,
-            0.45,
+            0.0,
+            0.0,
+            0.0,
             1.0
           ],
-          "intensity": 1.8,
-          "range": 6.0
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
         }
-      }
+      },
+      "id": "d3fb0422-54ed-42fd-af47-0174b0df3c6d",
+      "name": "Blue light",
+      "parent": null,
+      "tags": []
     },
     {
-      "id": "7405f9bc-f1dc-4111-816e-eb0b5cfcf3b5",
-      "name": "Orange light",
-      "parent": null,
-      "tags": [],
       "components": {
-        "Transform": {
-          "position": [
-            2.62,
-            0.82,
-            1.88
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ],
-          "scale": [
-            1,
-            1,
-            1
-          ]
-        },
         "PointLight": {
           "color": [
             1.0,
-            0.4,
-            0.12
+            0.4000000059604645,
+            0.11999999731779099
           ],
-          "intensity": 1.7,
-          "range": 5.4
+          "intensity": 1.7000000476837158,
+          "range": 5.400000095367432
+        },
+        "Transform": {
+          "position": [
+            2.619999885559082,
+            0.8199999928474426,
+            1.8799999952316284
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
         }
-      }
+      },
+      "id": "7405f9bc-f1dc-4111-816e-eb0b5cfcf3b5",
+      "name": "Orange light",
+      "parent": null,
+      "tags": []
+    },
+    {
+      "components": {
+        "Script": {
+          "enabled": true,
+          "properties": {
+            "bleedAmount": 0.0,
+            "bleedEnabled": true,
+            "bleedMode": 0.0,
+            "brightness": 1.15,
+            "contrast": 0.9,
+            "lookEnabled": true,
+            "posterizeLevels": 7.0,
+            "posterizeLift": 2.0,
+            "posterizeStrength": 1.0
+          },
+          "script": {
+            "id": "7fcd9498-d028-4a8a-b925-96abdc8f31bc",
+            "path": "game/scripts/retrolook.lua"
+          }
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "id": "e67220ab-94ce-43e9-bc05-04440f8f2873",
+      "name": "Retro Look",
+      "parent": null,
+      "tags": []
     }
-  ]
+  ],
+  "version": 1
 }

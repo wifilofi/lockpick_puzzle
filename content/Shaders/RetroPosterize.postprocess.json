@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "shader": {
+    "id": "538aeeec-9167-4aea-a45b-0f89144ac8c6",
+    "path": "game/shaders/retrolook.hlsl"
+  },
+  "entryPoint": "PSPosterize",
+  "defines": []
+}
