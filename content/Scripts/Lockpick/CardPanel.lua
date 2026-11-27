@@ -12,6 +12,14 @@ function CardPanel.new(document, controls, selectCard)
             label = assert(document:GetElement("card-value" .. slot)),
         }
         assert(document:On(id, "click", function() selectCard(slot) end))
+        assert(document:On(id, "mouseover", function() self.hovered = slot end))
+        assert(document:On(id, "mouseout", function()
+            if self.hovered == slot then self.hovered = nil end
+        end))
+        assert(document:On(id, "focus", function() self.focused = slot end))
+        assert(document:On(id, "blur", function()
+            if self.focused == slot then self.focused = nil end
+        end))
         controls:BindAction(id, PhysicalKey["Num" .. slot])
     end
     return self
@@ -28,6 +36,19 @@ function CardPanel:setHint(slot)
     if self.hintSlot then assert(self.keys[self.hintSlot].button:SetClass("hinted", false)) end
     if slot then assert(self.keys[slot].button:SetClass("hinted", true)) end
     self.hintSlot = slot
+end
+
+function CardPanel:highlightedKey()
+    local hovered = self.keys[self.hovered]
+    if hovered and hovered.value then return self.hovered end
+    local focused = self.keys[self.focused]
+    if focused and focused.value then return self.focused end
+    return self.hintSlot
+end
+
+function CardPanel:clearKeyPreview()
+    self.hovered, self.focused = nil, nil
+    self:setHint(nil)
 end
 
 function CardPanel:update(hand, slots, count)

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "shaderFile": {
+    "id": "275b3afe-45a9-4763-bb11-9f1f5ca38127",
+    "path": "game/Shaders/DarkPolishedSteel.hlsl"
+  },
+  "hooks": [
+    "GBufferPS"
+  ]
+}

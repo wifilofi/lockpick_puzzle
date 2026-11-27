@@ -88,11 +88,23 @@ function Round:selectCard(slot)
     return true
 end
 
-function Round:selectKey(key)
-    for slot, handKey in ipairs(self.handSlots) do
-        if handKey == key then return self:selectCard(slot) end
+local function handSlotForKey(handSlots, key)
+    for slot, handKey in ipairs(handSlots) do
+        if handKey == key then return slot end
     end
-    return nil
+end
+
+function Round:selectKey(key)
+    local slot = handSlotForKey(self.handSlots, key)
+    if slot then return self:selectCard(slot) end
+end
+
+function Round:previewTarget(key)
+    if not key or not self:isReady() then return end
+    local slot = handSlotForKey(self.handSlots, key)
+    if not slot then return end
+    local target = PuzzleRules.targetAfterTurn(self.target, self.hand[slot], self.socketCount)
+    if target ~= self.target then return target end
 end
 
 function Round:canUndo()

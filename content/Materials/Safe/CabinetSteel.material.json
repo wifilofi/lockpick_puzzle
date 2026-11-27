@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "shaderFile": {
+    "id": "47f6c856-620a-4fca-9a54-3ad9231171a8",
+    "path": "game/Shaders/CabinetSteel.hlsl"
+  },
+  "hooks": [
+    "GBufferPS"
+  ]
+}

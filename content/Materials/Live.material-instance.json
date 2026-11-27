@@ -1,19 +1,20 @@
 {
   "version": 2,
   "material": {
-    "id": "37ed2583-96ec-4820-b86c-281450224e4d",
-    "path": "engine/primitives/default.material.json"
+    "id": "71609a3d-d4b1-46c0-bda0-17682af0420d",
+    "path": "game/Materials/LivePinSteel.material.json"
   },
   "parameters": {
     "albedoTexture": {
-      "id": "44f63b59-6c25-41c1-b22b-f493c935708a",
-      "path": "game/Materials/Live.png"
+      "id": "8ec28cea-b4ab-4030-ba00-e8929fc830f8",
+      "path": "game/Textures/Safe/HardwareSteel.dds"
     },
     "shininess": 28,
-    "emission": [0.18, 0.85, 1.7],
+    "specularColor": [0.45, 0.48, 0.52],
+    "emission": [0.08, 2.8, 3.4],
     "emissionTexture": {
       "id": "a0a4e3c9-6f07-4b48-905b-8ecfe2ecfa02",
-      "path": "game/Materials/Tile_Electricity.png"
+      "path": "game/Textures/Materials/Tile_Electricity.png"
     }
   }
 }

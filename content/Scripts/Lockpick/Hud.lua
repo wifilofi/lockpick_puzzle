@@ -4,25 +4,12 @@ local PhonePanel = require("Scripts.Lockpick.PhonePanel")
 local Hud = {}
 Hud.__index = Hud
 
-local HUD_STATUS = {
-    openingStrike = "Setting the opening pin…",
-    choose = "Choose a rotation card. + turns clockwise, - turns counterclockwise.",
-    turning = "Turning the lock…",
-    occupied = "Socket occupied",
-    openingDoor = "Opening the door…",
-}
-
 function Hud.new(actions)
     local document = assert(UI.LoadDocument("game/UI/Lockpick.rml"))
     local self = setmetatable({
         document = document,
         keypad = assert(document:GetElement("card-panel")),
         phone = assert(document:GetElement("phone")),
-        title = assert(document:GetElement("level")),
-        attemptsLabel = assert(document:GetElement("attempts")),
-        linkHelp = assert(document:GetElement("link-help")),
-        springHelp = assert(document:GetElement("spring-help")),
-        message = assert(document:GetElement("message")),
         resultDim = assert(document:GetElement("result-dim")),
         fpsLabel = assert(document:GetElement("fps-counter")),
         fpsVisible = false,
@@ -97,34 +84,17 @@ end
 
 function Hud:showHint(slot)
     self.cardPanel:setHint(slot)
-    local text = slot and "Try the highlighted key." or "No winning moves left. Use Undo or Restart."
-    assert(self.message:SetText(text))
-    self.displayedStatus = nil
+end
+
+function Hud:highlightedKey()
+    return self.cardPanel:highlightedKey()
+end
+
+function Hud:clearKeyPreview()
+    self.cardPanel:clearKeyPreview()
 end
 
 function Hud:update(round, canAdvance)
-    if self.displayedName ~= round.name then
-        self.displayedName = round.name
-        assert(self.title:SetText(round.name))
-    end
-    local hasLinks = #round.linkPairs > 0
-    if self.displayedLinkHelp ~= hasLinks then
-        self.displayedLinkHelp = hasLinks
-        assert(self.linkHelp:SetClass("hidden", not hasLinks))
-    end
-    local hasSprings = #round.springs > 0
-    if self.displayedSpringHelp ~= hasSprings then
-        self.displayedSpringHelp = hasSprings
-        assert(self.springHelp:SetClass("hidden", not hasSprings))
-    end
-    if self.displayedAttempts ~= round.attempts then
-        self.displayedAttempts = round.attempts
-        assert(self.attemptsLabel:SetText(("%d attempts left"):format(round.attempts)))
-    end
-    if self.displayedStatus ~= round.status then
-        self.displayedStatus = round.status
-        assert(self.message:SetText(HUD_STATUS[round.status] or ""))
-    end
     if self.outcome ~= round.result then
         local wasWon = self.outcome == "won"
         local won = round.result == "won"

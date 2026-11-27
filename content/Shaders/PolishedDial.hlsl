@@ -1,10 +1,14 @@
 #define SAFE_STEEL_CUSTOM_SURFACE
 #include "game/SafeSteel.hlsl"
 
+#ifndef POLISHED_STEEL_BRIGHTNESS
+#define POLISHED_STEEL_BRIGHTNESS 1.0
+#endif
+
 #if defined(MATERIAL_GBUFFER_PS)
 void PatchGBufferSurface(GBufferInput input, inout MaterialSurface surface)
 {
-    ApplySafeSteel(input, surface, 3.8, 2.0);
+    ApplySafeSteel(input, surface, 3.8, 2.0, 1.0);
 
     const float3 toCamera = normalize(View.cameraPos - input.worldPos);
     const float3 geometricNormal = normalize(input.normal);
@@ -29,7 +33,8 @@ void PatchGBufferSurface(GBufferInput input, inout MaterialSurface surface)
     const float steelDetail = 0.72 + 0.50 * dot(surface.albedo.rgb, float3(0.2126, 0.7152, 0.0722));
 
     // Weak diffuse response leaves room for the dark reflection bands.
-    surface.albedo.rgb *= 0.38;
-    surface.emission += reflectedLight * (1.30 * steelDetail);
+    surface.albedo.rgb *= 0.38 * POLISHED_STEEL_BRIGHTNESS;
+    surface.specularColor *= POLISHED_STEEL_BRIGHTNESS;
+    surface.emission += reflectedLight * (1.30 * steelDetail * POLISHED_STEEL_BRIGHTNESS);
 }
 #endif

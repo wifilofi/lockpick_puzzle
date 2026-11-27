@@ -7,7 +7,7 @@
   "parameters": {
     "albedoTexture": {
       "id": "c9d3d908-b6ab-4e0d-95c1-482d9dcaacf1",
-      "path": "game/Materials/metal71.png"
+      "path": "game/Textures/Materials/metal71.png"
     },
     "specularColor": [
       0.33,

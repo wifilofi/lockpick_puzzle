@@ -11,12 +11,6 @@
 <body>
     <div id="pick-hand-pivot" class="hidden"><div id="pick-hand-art"></div></div>
     <div id="falling-pick-pivot" class="hidden"><div id="falling-pick-art"></div></div>
-    <div id="header">
-        <h1 id="level"></h1>
-        <p id="attempts"></p>
-        <p id="link-help" class="hidden">Matching dots link two sockets. A strike sets both pins.</p>
-        <p id="spring-help" class="hidden">A bar marks a spring pin. It releases when the lock turns.</p>
-    </div>
     <div id="card-panel" class="below-screen">
         <button id="card1" class="card column-1 row-1 hidden"><span id="card-value1" class="card-value"></span></button>
         <button id="card2" class="card column-2 row-1 hidden"><span id="card-value2" class="card-value"></span></button>
@@ -27,9 +21,6 @@
         <button id="card7" class="card column-1 row-3 hidden"><span id="card-value7" class="card-value"></span></button>
         <button id="card8" class="card column-2 row-3 hidden"><span id="card-value8" class="card-value"></span></button>
         <button id="card9" class="card column-3 row-3 hidden"><span id="card-value9" class="card-value"></span></button>
-    </div>
-    <div id="controls">
-        <p id="message"></p>
     </div>
     <div id="result-dim"></div>
     <div id="title-backdrop"></div>

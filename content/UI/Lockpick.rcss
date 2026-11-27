@@ -13,18 +13,6 @@ body {
     color: #f4eee2;
     pointer-events: none;
 }
-#header {
-    position: absolute;
-    top: 18dp;
-    left: 22dp;
-}
-#header h1 {
-    margin-bottom: 2dp;
-}
-#attempts, #link-help, #spring-help {
-    color: #c4c5c9;
-    font-size: 14dp;
-}
 button {
     pointer-events: auto;
     background-color: #20242a;
@@ -35,16 +23,6 @@ button {
 button:hover {
     background-color: #4b4134;
     border-color: #e4b36b;
-}
-#controls {
-    position: absolute;
-    bottom: 14dp;
-    left: 35%;
-    width: 30%;
-    text-align: center;
-}
-#message {
-    font-size: 15dp;
 }
 #card-panel {
     position: absolute;

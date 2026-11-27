@@ -11,7 +11,7 @@ local ACTIONS = {
     { id = "hint", label = "Hint", action = "requestHint" },
     { id = "restart", label = "Restart", action = "restart", enabled = true },
     { id = "next-level", label = "Next Level", action = "advance" },
-    { id = "phone-home", label = "Title", action = "showTitle" },
+    { id = "phone-home", label = "Menu", action = "showTitle" },
 }
 
 function PhonePanel.new(document, actions)
@@ -98,7 +98,7 @@ function PhonePanel:update(round, canAdvance)
     self:setEnabled("undo", round:canUndo())
     self:setEnabled("hint", round:isReady())
     self:setEnabled("next-level", not self.blinking and canAdvance)
-    self:setEnabled("phone-home", not self.blinking and self.result ~= nil)
+    self:setEnabled("phone-home", not self.blinking)
     self.icons.restart.action = self.result and "retry" or "restart"
     self:showLabel()
 end

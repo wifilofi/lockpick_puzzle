@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "shaderFile": {
+    "id": "d1145d7e-f1fa-41f4-a098-0602d5d5c24d",
+    "path": "game/Shaders/CabinetDoorSteel.hlsl"
+  },
+  "hooks": [
+    "GBufferPS"
+  ]
+}

@@ -1,56 +1,9 @@
 local function create(settings)
-    -- Lock art and screwdriver contact use the fixed play camera coordinates.
-    local pixel = 2 * 7.2 * math.tan(0.72 / 2) / 1080
-    local lockY = settings.lockHeightOffset + (540 - 379) * pixel
     local socketRadius = settings.socketRadius
-    local socketFaceZ = settings.socketFaceZ
-    local hingeToLock = settings.hingeToLock
-    local hingeDepth = settings.hingeDepth
-    local dialMount = { hingeToLock, 0, -hingeDepth }
-    local safeScale = { settings.safeScaleX, settings.safeScaleY, settings.safeScaleZ }
     local lockScale = { settings.lockScaleX, settings.lockScaleY, settings.lockScaleZ }
     local origin = { 0, 0, 0 }
 
     return {
-        hinge = { -hingeToLock, lockY, hingeDepth },
-        handlePivot = { settings.handlePivotX, 0, settings.handlePivotZ },
-        dialMount = dialMount,
-        pickContact = { 0, lockY - socketRadius, socketFaceZ },
-        cabinet = {
-            name = "Safe Cabinet", mesh = settings.cabinetMesh, material = settings.cabinetMaterial,
-            position = { 0, lockY, 0 },
-            scale = safeScale,
-        },
-        frame = {
-            name = "Safe Frame", mesh = settings.frameMesh, material = settings.hardwareMaterial,
-            position = { 0, lockY, 0 },
-            scale = safeScale,
-        },
-        door = {
-            name = "Safe Door", mesh = settings.doorMesh, material = settings.cabinetMaterial,
-            position = origin,
-            scale = safeScale,
-        },
-        handle = {
-            name = "Safe Handle", mesh = settings.handleMesh, material = settings.hardwareMaterial,
-            position = origin,
-            scale = safeScale,
-        },
-        dial = {
-            name = "Safe dial", mesh = settings.dialMesh, material = settings.dialSatinMaterial,
-            position = dialMount,
-            scale = lockScale,
-        },
-        plug = {
-            name = "Lock plug", mesh = settings.plugMesh, material = settings.dialGraphiteMaterial,
-            position = origin,
-            scale = lockScale,
-        },
-        strikeGuide = {
-            name = "Strike guide", mesh = settings.strikeGuideMesh, material = settings.strikeGuideMaterial,
-            position = { 0, lockY - socketRadius, socketFaceZ + settings.strikeGuideDepthOffset },
-            scale = { settings.strikeGuideScaleX, settings.strikeGuideScaleY, settings.strikeGuideScaleZ },
-        },
         socket = {
             radius = socketRadius,
             housing = {
@@ -92,19 +45,19 @@ local function create(settings)
             },
             dialAccent = {
                 name = "Dial accent light",
-                position = { settings.dialLightPositionX, lockY + settings.dialLightHeightOffset, settings.dialLightPositionZ },
+                position = { settings.dialLightPositionX, settings.dialLightHeightOffset, settings.dialLightPositionZ },
                 color = { settings.dialLightColorR, settings.dialLightColorG, settings.dialLightColorB },
                 range = settings.dialLightRange, intensity = settings.dialLightIntensity,
             },
             interior = {
                 name = "Safe interior light",
-                position = { settings.interiorLightPositionX, lockY + settings.interiorLightHeightOffset, settings.interiorLightPositionZ },
+                position = { settings.interiorLightPositionX, settings.interiorLightHeightOffset, settings.interiorLightPositionZ },
                 color = { settings.interiorLightColorR, settings.interiorLightColorG, settings.interiorLightColorB },
                 range = settings.interiorLightRange, activeIntensity = settings.interiorLightIntensity,
             },
             shock = {
                 name = "Shock flash",
-                position = { 0, lockY - socketRadius, settings.shockLightPositionZ },
+                position = { 0, -socketRadius, settings.shockLightPositionZ },
                 color = { settings.shockLightColorR, settings.shockLightColorG, settings.shockLightColorB },
                 range = settings.shockLightRange, activeIntensity = settings.shockLightIntensity,
             },

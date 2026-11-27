@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "shader": {
+    "id": "41a8539b-b6e4-4a2a-9da8-01310bc22a46",
+    "path": "game/Shaders/StrikeGuideRing.hlsl"
+  },
+  "vertexEntryPoint": "VSMain",
+  "pixelEntryPoint": "PSMain",
+  "defines": [],
+  "blend": "Additive",
+  "depth": "ReadOnly"
+}

@@ -1,0 +1,19 @@
+{
+  "material": {
+    "id": "d8d61d61-ec6b-4791-88e0-8a1b39e41c83",
+    "path": "game/Materials/Safe/CabinetSteel.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "46caa84b-7983-462b-80f8-235f559ec36e",
+      "path": "game/Textures/Safe/CabinetSteel.dds"
+    },
+    "shininess": 999.0,
+    "specularColor": [
+      0.49000000953674316,
+      0.49000000953674316,
+      0.49000000953674316
+    ]
+  },
+  "version": 2
+}

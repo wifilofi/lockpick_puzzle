@@ -1,0 +1,19 @@
+{
+  "material": {
+    "id": "eacea425-5c04-413d-a556-732c67e4d915",
+    "path": "game/Materials/Safe/PolishedDial.material.json"
+  },
+  "parameters": {
+    "albedoTexture": {
+      "id": "8ec28cea-b4ab-4030-ba00-e8929fc830f8",
+      "path": "game/Textures/Safe/HardwareSteel.dds"
+    },
+    "shininess": 50.0,
+    "specularColor": [
+      0.6200000047683716,
+      0.6299999952316284,
+      0.6399999856948853
+    ]
+  },
+  "version": 2
+}

@@ -6,14 +6,14 @@
       "components": {
         "Camera": {
           "farPlane": 75.0,
-          "fovY": 0.7200000286102295,
+          "fovY": 0.7155850529670715,
           "nearPlane": 0.10000000149011612
         },
         "Transform": {
           "position": [
             0.0,
-            0.05000000074505806,
-            7.199999809265137
+            0.45521581172943115,
+            4.369736194610596
           ],
           "rotation": [
             0.0,
@@ -72,7 +72,7 @@
         "Script": {
           "enabled": true,
           "properties": {
-            "bulbIntensity": 30.0,
+            "bulbIntensity": 0.0,
             "bulbRange": 0.5,
             "dialLightIntensity": 6.2,
             "keyLightIntensity": 8.0
@@ -110,18 +110,18 @@
       "components": {
         "PointLight": {
           "color": [
-            0.11999999731779099,
-            0.44999998807907104,
+            0.239215686917305,
+            0.7960784435272217,
             1.0
           ],
-          "intensity": 1.7999999523162842,
-          "range": 6.0
+          "intensity": 4.0,
+          "range": 10.0
         },
         "Transform": {
           "position": [
-            2.8499999046325684,
+            3.601706027984619,
             1.4500000476837158,
-            2.25
+            1.35121488571167
           ],
           "rotation": [
             0.0,
@@ -149,13 +149,13 @@
             0.4000000059604645,
             0.11999999731779099
           ],
-          "intensity": 2.0,
-          "range": 8.0
+          "intensity": 8.0,
+          "range": 10.0
         },
         "Transform": {
           "position": [
-            -3.3651123046875,
-            -1.6350228786468506,
+            -3.295304298400879,
+            1.2712299823760986,
             1.8799999952316284
           ],
           "rotation": [
@@ -178,15 +178,422 @@
     },
     {
       "components": {
+        "Transform": {
+          "position": [
+            0.0,
+            0.8580114841461182,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "id": "8f4ec3d8-7351-4f23-9d86-6058e9dc5528",
+      "name": "Safe",
+      "parent": null,
+      "tags": []
+    },
+    {
+      "components": {
+        "MeshRenderer": {
+          "materialInstance": {
+            "id": "b3605814-14d4-4062-8054-7ef7e44bd663",
+            "path": "game/Materials/Safe/CabinetMetal.material-instance.json"
+          },
+          "mesh": {
+            "id": "dc7a8dfb-4054-45a4-8d4e-4e013bdfc078",
+            "path": "game/Models/Safe/Cabinet.obj"
+          }
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            8.800000190734863,
+            6.25,
+            6.25
+          ]
+        }
+      },
+      "id": "781868bd-7c1a-467e-86e5-fb327e974a9e",
+      "name": "Safe Cabinet",
+      "parent": "8f4ec3d8-7351-4f23-9d86-6058e9dc5528",
+      "tags": []
+    },
+    {
+      "components": {
+        "MeshRenderer": {
+          "materialInstance": {
+            "id": "27667034-1cc4-41ff-aabb-979e1a9d2ea9",
+            "path": "game/Materials/Safe/DarkPolishedSteel.material-instance.json"
+          },
+          "mesh": {
+            "id": "cc9d5157-fe61-4ee6-91cf-30393e461533",
+            "path": "game/Models/Safe/Frame.obj"
+          }
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            8.800000190734863,
+            6.25,
+            6.25
+          ]
+        }
+      },
+      "id": "fc5c8faf-055c-4180-8074-493de57d5010",
+      "name": "Safe Frame",
+      "parent": "8f4ec3d8-7351-4f23-9d86-6058e9dc5528",
+      "tags": []
+    },
+    {
+      "components": {
+        "Transform": {
+          "position": [
+            -1.0851999521255493,
+            0.0,
+            -0.013700000010430813
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "id": "4b061fff-550a-4821-be98-39736f371f2e",
+      "name": "Safe door hinge",
+      "parent": "8f4ec3d8-7351-4f23-9d86-6058e9dc5528",
+      "tags": []
+    },
+    {
+      "components": {
+        "MeshRenderer": {
+          "materialInstance": {
+            "id": "11d8a10a-92cf-4289-8d86-1211219e1dc0",
+            "path": "game/Materials/Safe/CabinetDoor.material-instance.json"
+          },
+          "mesh": {
+            "id": "5e8a2e5e-bf3a-4b87-8808-b9f963348651",
+            "path": "game/Models/Safe/Door.obj"
+          }
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            8.800000190734863,
+            6.25,
+            6.25
+          ]
+        }
+      },
+      "id": "8b36650b-0313-4a8c-a2ea-5818e6d55745",
+      "name": "Safe Door",
+      "parent": "4b061fff-550a-4821-be98-39736f371f2e",
+      "tags": []
+    },
+    {
+      "components": {
+        "Transform": {
+          "position": [
+            2.5766000747680664,
+            0.0,
+            -0.041600000113248825
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "id": "72211fb9-ebf6-4661-b0c8-82da46c169a7",
+      "name": "Safe handle pivot",
+      "parent": "4b061fff-550a-4821-be98-39736f371f2e",
+      "tags": []
+    },
+    {
+      "components": {
+        "MeshRenderer": {
+          "materialInstance": {
+            "id": "9945637a-34bb-4417-9664-61f9aceaa6e1",
+            "path": "game/Materials/Safe/HardwareMetal.material-instance.json"
+          },
+          "mesh": {
+            "id": "7a2c0686-3011-477b-90d0-71db904ee7ec",
+            "path": "game/Models/Safe/Handle.obj"
+          }
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            8.800000190734863,
+            6.25,
+            6.25
+          ]
+        }
+      },
+      "id": "3345c253-96c0-4cf2-82b8-8750a2fb068c",
+      "name": "Safe Handle",
+      "parent": "72211fb9-ebf6-4661-b0c8-82da46c169a7",
+      "tags": []
+    },
+    {
+      "components": {
+        "Transform": {
+          "position": [
+            1.0851999521255493,
+            0.0,
+            0.013700000010430813
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "id": "b7549568-8ade-48b5-b129-9a1512ede58e",
+      "name": "Dial mount",
+      "parent": "4b061fff-550a-4821-be98-39736f371f2e",
+      "tags": []
+    },
+    {
+      "components": {
+        "MeshRenderer": {
+          "materialInstance": {
+            "id": "0de90de2-0753-45fe-81d6-d8d06aed36ee",
+            "path": "game/Materials/Safe/DialSatin.material-instance.json"
+          },
+          "mesh": {
+            "id": "df066d42-9ffb-4af3-8b24-d75763072af1",
+            "path": "game/Models/Safe/Dial.obj"
+          }
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            10.600000381469727,
+            10.600000381469727,
+            6.25
+          ]
+        }
+      },
+      "id": "a0bc93e1-87e8-469a-84a7-ea9795b60315",
+      "name": "Safe dial",
+      "parent": "b7549568-8ade-48b5-b129-9a1512ede58e",
+      "tags": []
+    },
+    {
+      "components": {
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "id": "3eeff9be-e73c-4a2e-a604-072501e80d11",
+      "name": "Lock rotor",
+      "parent": "b7549568-8ade-48b5-b129-9a1512ede58e",
+      "tags": []
+    },
+    {
+      "components": {
+        "MeshRenderer": {
+          "materialInstance": {
+            "id": "ca3196b0-cdba-45af-93f5-0edad7a12690",
+            "path": "game/Materials/Safe/DialGraphite.material-instance.json"
+          },
+          "mesh": {
+            "id": "3acad9ba-5a77-4873-9fa5-ebe255b1c60f",
+            "path": "game/Models/Safe/Plug.obj"
+          }
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            10.600000381469727,
+            10.600000381469727,
+            6.25
+          ]
+        }
+      },
+      "id": "bd8ea3a8-72ac-405e-aa8e-c887f91dc7dd",
+      "name": "Lock plug",
+      "parent": "3eeff9be-e73c-4a2e-a604-072501e80d11",
+      "tags": []
+    },
+    {
+      "components": {
+        "Transform": {
+          "position": [
+            0.0,
+            -0.5307999849319458,
+            0.05209999904036522
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "id": "c924aee5-301d-4e22-8503-6d0bf4467a8b",
+      "name": "Pick contact",
+      "parent": "b7549568-8ade-48b5-b129-9a1512ede58e",
+      "tags": []
+    },
+    {
+      "components": {
+        "PointLight": {
+          "color": [
+            1.0,
+            0.3921568691730499,
+            0.21960784494876862
+          ],
+          "intensity": 20.0,
+          "range": 0.5
+        },
+        "Transform": {
+          "position": [
+            0.0,
+            -0.5307999849319458,
+            0.0640999972820282
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "id": "ebc93e98-da34-44dd-be86-759b1f73efc3",
+      "name": "Strike guide",
+      "parent": "8f4ec3d8-7351-4f23-9d86-6058e9dc5528",
+      "tags": []
+    },
+    {
+      "components": {
         "Script": {
           "enabled": true,
           "properties": {
-            "bleedAmount": 0.0,
+            "bleedAmount": 0.3,
             "bleedEnabled": true,
             "bleedMode": 0.0,
             "brightness": 1.15,
             "contrast": 0.9,
-            "enabled": false,
+            "enabled": true,
             "grainAmount": 0.01,
             "grainSize": 1.0,
             "grainSmoothness": 0.0,

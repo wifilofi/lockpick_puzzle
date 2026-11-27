@@ -1,44 +1,20 @@
 Properties = {
-    -- Safe and lock placement
-    lockHeightOffset = 0.05,
+    -- Generated socket placement
     socketRadius = 0.5308,
-    socketFaceZ = 0.0521,
-    hingeToLock = 1.0852,
-    hingeDepth = -0.0137,
-    handlePivotX = 2.5766,
-    handlePivotZ = -0.0416,
-    safeScaleX = 8.8,
-    safeScaleY = 6.25,
-    safeScaleZ = 6.25,
     lockScaleX = 10.6,
     lockScaleY = 10.6,
     lockScaleZ = 6.25,
 
-    -- Meshes and materials
-    cabinetMaterial = "game/Models/Safe/CabinetMetal.material-instance.json",
-    hardwareMaterial = "game/Models/Safe/HardwareMetal.material-instance.json",
-    dialSatinMaterial = "game/Models/Safe/DialSatin.material-instance.json",
-    dialGraphiteMaterial = "game/Models/Safe/DialGraphite.material-instance.json",
+    -- Generated meshes and materials
+    dialSatinMaterial = "game/Materials/Safe/DialSatin.material-instance.json",
     darkMaterial = "game/Materials/Dark.material-instance.json",
     cylinderMesh = "game/Meshes/Cylinder.obj",
-    strikeGuideMesh = "game/Models/Safe/StrikeGuide.obj",
-    strikeGuideMaterial = "game/Materials/Shock.material-instance.json",
-    cabinetMesh = "game/Models/Safe/Cabinet.obj",
-    frameMesh = "game/Models/Safe/Frame.obj",
-    doorMesh = "game/Models/Safe/Door.obj",
-    handleMesh = "game/Models/Safe/Handle.obj",
-    dialMesh = "game/Models/Safe/Dial.obj",
-    plugMesh = "game/Models/Safe/Plug.obj",
     socketMesh = "game/Models/Safe/Socket.obj",
     livePinMesh = "game/Models/Safe/Pin.obj",
     livePinMaterial = "game/Materials/Live.material-instance.json",
     springMarkerMesh = "engine/primitives/cube/model.obj",
 
     -- Socket details and markers
-    strikeGuideDepthOffset = 0.012,
-    strikeGuideScaleX = 1,
-    strikeGuideScaleY = 1,
-    strikeGuideScaleZ = 1,
     socketInsetZ = 0.045,
     socketInsetScaleX = 0.065,
     socketInsetScaleY = 0.065,
@@ -142,6 +118,7 @@ end
 local function refreshRound()
     view:restart(round)
     hand:reset()
+    hud:clearKeyPreview()
     refreshHud()
 end
 
@@ -181,7 +158,10 @@ local function undo()
 end
 
 local function showTitle()
-    if canPlay() then menu:show() end
+    if canPlay() then
+        view:hideGuide()
+        menu:show()
+    end
 end
 
 local function startLevel(id)
@@ -216,8 +196,14 @@ function OnUpdate(dt)
     hud:updateEntrance()
     view:updateBulbs()
     if not menu:isPlaying() then return end
+    view:updateElectricity()
     if not transition:isActive() and hud:pollInput() then return end
-    if not round:isAnimating() then return end
+    if not round:isAnimating() then
+        local key = not transition:isActive() and hud:highlightedKey()
+        view:setGuidePreview(round:previewTarget(key))
+        return
+    end
+    view:setGuidePreview(nil)
     local previousStatus, previousAttempts, previousResult = round.status, round.attempts, round.result
     local phase, progress, elapsed = round:update(dt)
     view:update(round, phase, progress, elapsed)
