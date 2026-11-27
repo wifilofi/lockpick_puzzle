@@ -9,6 +9,11 @@
       "id": "44f63b59-6c25-41c1-b22b-f493c935708a",
       "path": "game/Materials/Live.png"
     },
-    "shininess": 28
+    "shininess": 28,
+    "emission": [0.18, 0.85, 1.7],
+    "emissionTexture": {
+      "id": "a0a4e3c9-6f07-4b48-905b-8ecfe2ecfa02",
+      "path": "game/Materials/Tile_Electricity.png"
+    }
   }
 }
